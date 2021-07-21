@@ -3,10 +3,7 @@ import store from "../store";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
-import Subjects from "../views/Subjects.vue";
 import Configuration from "../views/Configuration.vue";
-import Groups from "../views/Groups.vue";
-
 const routes = [
   { path: "/", redirect: "/inicio" },
   {
@@ -23,18 +20,6 @@ const routes = [
     path: "/inicio",
     name: "Home",
     component: Home,
-    meta: { requireAuth: true },
-  },
-  {
-    path: "/tomar-materias",
-    name: "Subjects",
-    component: Subjects,
-    meta: { requireAuth: true },
-  },
-  {
-    path: "/tomar-grupos",
-    name: "Groups",
-    component: Groups,
     meta: { requireAuth: true },
   },
   {
