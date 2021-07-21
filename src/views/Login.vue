@@ -4,7 +4,7 @@
       @submit.prevent="login(user)"
       class=" bg-gray-50 p-4 md:p-10 lg:p-10 xl:p-10 rounded-2xl bg-opacity-10 backdrop-filter backdrop-blur-xl shadow-md"
     >
-      <h1 class="text-center text-white text-4xl mb-12">Ingresar</h1>
+      <h1 class="text-center text-white text-4xl mb-12">Ingreso de Alumno</h1>
       <div class="">
         <input
           class="block w-72 mx-auto my-5 p-2 | text-white rounded-lg shadow-lg transition-all ease-in-out hover:shadow-xl bg-gray-50 bg-opacity-25 hover:bg-opacity-40 focus:bg-opacity-40 outline-none placeholder-white focus:placeholder-transparent focus:ring-4 ring-white ring-opacity-20"
@@ -44,9 +44,9 @@ export default {
   data: function() {
     return {
       user: {
-        user: "lucaspintos909@gmail.com",
-        password: "lucas",
-        type: "teacher",
+        user: "mateo@alumno.com",
+        password: "1234",
+        type: "student",
       },
     };
   },

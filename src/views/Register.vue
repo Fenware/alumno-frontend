@@ -4,7 +4,7 @@
       @submit.prevent="userRegister()"
       class=" bg-gray-50 p-4 md:p-10 lg:p-10 xl:p-10 rounded-2xl bg-opacity-10 backdrop-filter backdrop-blur-xl shadow-md"
     >
-      <h1 class="text-center text-white text-4xl mb-8">Registro Docente</h1>
+      <h1 class="text-center text-white text-4xl mb-8">Registro Alumno</h1>
       <div class="">
         <div class="flex gap-4">
           <div class="">
@@ -122,7 +122,7 @@ export default {
         email: "",
         password: "",
         confirm_password: "",
-        type: "teacher",
+        type: "student",
       },
     };
   },

@@ -10,14 +10,10 @@
           </router-link>
         </li>
         <li>
-          <router-link :to="{ name: 'Groups' }" class="cursor-pointer">
             <i :class="'fa-users ' + icon_class"></i>
-          </router-link>
         </li>
         <li>
-          <router-link :to="{ name: 'Subjects' }" class="cursor-pointer">
             <i :class="'fa-book ' + icon_class"></i>
-          </router-link>
         </li>
         <li class="cursor-pointer">
           <i :class="'fa-user ' + icon_class"></i>
