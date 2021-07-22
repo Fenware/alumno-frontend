@@ -5,7 +5,7 @@ import axios from "axios";
 export default createStore({
   state: {
     API_URL: process.env.VUE_APP_ROOT_API,
-    groups: [],
+    group: null,
     user: {
       id: null,
       ci: null,
@@ -58,18 +58,8 @@ export default createStore({
       state.user["second_surname"] = "";
       state.user["email"] = "";
     },
-    clearGroups(state) {
-      state.groups = [];
-    },
-    addGroup(state, group) {
-      state.groups.push(group);
-    },
-    removeGroup(state, id) {
-      state.groups.forEach((group, index) => {
-        if (parseInt(group.id_group) == id) {
-          state.groups.splice(index, 1);
-        }
-      });
+    setGroup(state, group) {
+      state.group = group;
     },
   },
   actions: {
