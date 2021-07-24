@@ -6,6 +6,8 @@ export default createStore({
   state: {
     API_URL: process.env.VUE_APP_ROOT_API,
     group: null,
+    subjects: null,
+    consultations: [],
     user: {
       id: null,
       ci: null,
@@ -61,6 +63,10 @@ export default createStore({
     setGroup(state, group) {
       state.group = group;
     },
+    setUserSubjects(state, subjects){
+      state.subjects = [];
+      state.subjects = subjects;
+    }
   },
   actions: {
     searcher({ commit }, payload) {
@@ -115,6 +121,40 @@ export default createStore({
             commit("setToken", null);
             localStorage.removeItem("token");
             router.push("login");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async getUserGroup({state, dispatch, commit}) {
+      await axios({
+        method: "get",
+        url: state.API_URL + "/user-grupo",
+        headers: state.headers,
+      })
+        .then((res) => {
+          if (Array.isArray(res.data) && res.data.length > 0) {
+            commit('setGroup', res.data[0]);
+            if(state.subjects == null){
+              dispatch('getUserSubjects');
+            }
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async getUserSubjects({state, commit}) {
+      await axios({
+        method: "get",
+        url: state.API_URL + `/orientacion-materia?id=${state.group.id_orientation}`,
+        headers: state.headers,
+      })
+        .then((res) => {
+          if (Array.isArray(res.data) && res.data.length > 0) {
+            console.log(res.data);
+            commit('setUserSubjects',res.data);
           }
         })
         .catch((error) => {
