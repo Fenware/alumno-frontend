@@ -52,7 +52,7 @@
 
 <script>
 import axios from "axios";
-import { mapMutations, mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "Groups",
@@ -62,34 +62,14 @@ export default {
     };
   },
   computed: {
-    ...mapState(["API_URL", "headers", "group"])
-  },
-  created() {
-    this.getUserGroup();
+    ...mapState(["API_URL", "headers", "group"]),
   },
   methods: {
-    ...mapMutations(['setGroup']),
-    async getUserGroup() {
-      await axios({
-        method: "get",
-        url: this.API_URL + "/user-grupo",
-        headers: this.headers,
-      })
-        .then((res) => {
-          console.log(res);
-          if (Array.isArray(res.data) && res.data.length > 0) {
-            this.setGroup(res.data[0]);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
+    ...mapActions(["getUserGroup"]),
     async takeGroup() {
       let data = {
         code: this.group_code,
       };
-
       await axios({
         method: "post",
         url: this.API_URL + "/user-grupo",
