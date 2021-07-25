@@ -4,6 +4,8 @@ import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Configuration from "../views/Configuration.vue";
+import Consultation from "../views/Consultation.vue";
+
 const routes = [
   { path: "/", redirect: "/inicio" },
   {
@@ -20,6 +22,12 @@ const routes = [
     path: "/inicio",
     name: "Home",
     component: Home,
+    meta: { requireAuth: true },
+  },
+  {
+    path: "/consulta/:id",
+    name: "Consultation",
+    component: Consultation,
     meta: { requireAuth: true },
   },
   {
