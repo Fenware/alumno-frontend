@@ -7,6 +7,15 @@ export default createStore({
     API_URL: process.env.VUE_APP_ROOT_API,
     group: null,
     subjects: null,
+    consultation: {
+      creation_date: "Esperando datos",
+      group_name: "Esperando datos",
+      id: "Esperando datos",
+      state: "1",
+      subject_name: "Esperando datos",
+      teacher_name: "Esperando datos",
+      theme: "Esperando datos",
+    },
     consultations: [],
     user: {
       id: null,
@@ -63,10 +72,18 @@ export default createStore({
     setGroup(state, group) {
       state.group = group;
     },
-    setUserSubjects(state, subjects){
-      state.subjects = [];
+    setUserSubjects(state, subjects) {
       state.subjects = subjects;
-    }
+    },
+    setConsultations(state, consultations) {
+      state.consultations = consultations;
+    },
+    addConsultation(state, consultation) {
+      state.consultations.push(consultation);
+    },
+    setConsultation(state, consultation) {
+      state.consultation = consultation;
+    },
   },
   actions: {
     searcher({ commit }, payload) {
@@ -127,7 +144,7 @@ export default createStore({
           console.log(error);
         });
     },
-    async getUserGroup({state, dispatch, commit}) {
+    async getUserGroup({ state, dispatch, commit }) {
       await axios({
         method: "get",
         url: state.API_URL + "/user-grupo",
@@ -135,9 +152,9 @@ export default createStore({
       })
         .then((res) => {
           if (Array.isArray(res.data) && res.data.length > 0) {
-            commit('setGroup', res.data[0]);
-            if(state.subjects == null){
-              dispatch('getUserSubjects');
+            commit("setGroup", res.data[0]);
+            if (state.subjects == null) {
+              dispatch("getUserSubjects");
             }
           }
         })
@@ -145,22 +162,65 @@ export default createStore({
           console.log(error);
         });
     },
-    async getUserSubjects({state, commit}) {
+    async getUserSubjects({ state, commit }) {
       await axios({
         method: "get",
-        url: state.API_URL + `/orientacion-materia?id=${state.group.id_orientation}`,
+        url:
+          state.API_URL +
+          `/orientacion-materia?id=${state.group.id_orientation}`,
         headers: state.headers,
       })
         .then((res) => {
           if (Array.isArray(res.data) && res.data.length > 0) {
-            console.log(res.data);
-            commit('setUserSubjects',res.data);
+            commit("setUserSubjects", res.data);
           }
         })
         .catch((error) => {
           console.log(error);
         });
     },
+    async syncConsultations({ state, commit }) {
+      await axios({
+        method: "get",
+        url: state.API_URL + "/consulta",
+        headers: state.headers,
+      })
+        .then((res) => {
+          console.log(res.data);
+          if (Array.isArray(res.data) && res.data.length > 0) {
+            commit("setConsultations", res.data);
+          } else {
+            console.log("Error: syncConsultations ->" + res.data);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async sendConsultationMessage({state}, message_data){
+      let data = {
+        consulta: message_data.consulta,
+        msg: message_data.msg,
+      };
+      console.log(data);
+      await axios({
+        method: "post",
+        url: state.API_URL + "/consulta-mensaje",
+        data: data,
+        headers: state.headers,
+      })
+        .then((res) => {
+          console.log(res);
+          /* if (Array.isArray(res.data) && res.data.length > 0) {
+            this.addConsultation(res.data[0]);
+          }else{
+            alert(res.data.result.error_msg);
+          } */
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   },
   getters: {
     subjectsFiltered(state) {
