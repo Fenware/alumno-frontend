@@ -1,5 +1,5 @@
 <template>
-  <div class="" v-if="currentRouteName() == 'Login' || currentRouteName() == 'Register'">
+  <div v-if="currentRouteName() == 'Login' || currentRouteName() == 'Register'">
     <router-view />
   </div>
   <div class="flex items-center min-h-screen max-h-screen max-w-screen" v-else>
@@ -28,13 +28,13 @@ export default {
     ...mapActions(["syncToken"]),
     currentRouteName() {
       return this.$route.name;
-    }
+    },
   },
-  beforeCreated(){
-    if(this.currentRouteName() != "Register"){
+  beforeCreated() {
+    if (this.currentRouteName() != "Register") {
       this.syncToken();
     }
-  }
+  },
 };
 </script>
 
@@ -66,12 +66,12 @@ body {
   width: 8px;
   cursor: pointer;
 }
- 
+
 ::-webkit-scrollbar-track {
   background: #ddd;
 }
- 
+
 ::-webkit-scrollbar-thumb {
-  background: #666; 
+  background: #666;
 }
 </style>
