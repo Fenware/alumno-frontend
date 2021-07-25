@@ -92,7 +92,7 @@ export default {
     this.getConsultationMessages(id);
   },
   methods: {
-    ...mapMutations(["setConsultation"]),
+    ...mapMutations(["setConsultation",'removeConsultation']),
     async getConsultation(id) {
       let data = `consulta=${id}`;
       await axios({
@@ -139,12 +139,12 @@ export default {
         headers: this.headers,
       })
         .then((res) => {
-          console.log(res);
-          /* if (Array.isArray(res.data) && res.data.length > 0) {
-            this.setConsultation(res.data[0]);
+          if (parseInt(res.data) == 1) {
+            this.$router.push('/inicio');
+            this.removeConsultation(parseInt(this.consultation.id));
           } else {
             console.log("Error: closeConsultation ->" + res.data);
-          } */
+          }
         })
         .catch((error) => {
           console.log(error);
