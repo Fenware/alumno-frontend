@@ -21,22 +21,40 @@
           >{{ subject.name }}</option
         >
       </select>
+
       <label class="block pl-1 text-sm" for="matter">Asunto</label>
-      <textarea
-        class="block w-72 mx-auto p-1 |  placeholder-opacity-40 text-white rounded-lg shadow-lg transition-all ease-in-out hover:shadow-xl bg-gray-50 bg-opacity-25 hover:bg-opacity-40 focus:bg-opacity-40 outline-none placeholder-white focus:placeholder-transparent focus:ring-3 ring-white ring-opacity-20"
+      <input
+        class="block w-72 mx-auto p-1 mb-4 |  placeholder-opacity-40 text-white rounded-lg shadow-lg transition-all ease-in-out hover:shadow-xl bg-gray-50 bg-opacity-25 hover:bg-opacity-40 focus:bg-opacity-40 outline-none placeholder-white focus:placeholder-transparent focus:ring-3 ring-white ring-opacity-20"
         id="matter"
         v-model="consultation.matter"
         placeholder="Escriba aquí..."
+      />
+
+      <label class="block pl-1 text-sm" for="message">Mensaje</label>
+      <textarea
+        class="block w-72 mx-auto p-1 |  placeholder-opacity-40 text-white rounded-lg shadow-lg transition-all ease-in-out hover:shadow-xl bg-gray-50 bg-opacity-25 hover:bg-opacity-40 focus:bg-opacity-40 outline-none placeholder-white focus:placeholder-transparent focus:ring-3 ring-white ring-opacity-20"
+        id="message"
+        v-model="consultation.message"
+        placeholder="Escriba el mensaje aquí..."
         cols="30"
         rows="4"
       ></textarea>
 
-      <button
-        @click="createConsultation()"
-        class="block mx-auto mt-5 py-2 px-10 | text-white rounded-lg shadow-lg transition-all ease-in-out hover:shadow-xl cursor-pointer bg-green-500 bg-opacity-25 hover:bg-opacity-40 outline-none focus:ring-4 ring-green-500  ring-opacity-20"
-      >
-        Enviar consulta
-      </button>
+      <div class="flex mb-1">
+        <button
+          @click="createConsultation()"
+          class="block mx-auto mt-5 py-2 px-5 | text-white rounded-lg shadow-lg transition-all ease-in-out hover:shadow-xl cursor-pointer bg-green-500 bg-opacity-25 hover:bg-opacity-40 outline-none focus:ring-4 ring-green-500  ring-opacity-20"
+        >
+          Enviar consulta
+        </button>
+
+        <button
+          @click="toogleCreateMode()"
+          class="block mx-auto mt-5 py-2 px-5 | text-white rounded-lg shadow-lg transition-all ease-in-out hover:shadow-xl cursor-pointer bg-red-500 bg-opacity-25 hover:bg-opacity-40 outline-none focus:ring-4 ring-green-500  ring-opacity-20"
+        >
+          Cancelar
+        </button>
+      </div>
     </div>
   </div>
 
@@ -58,7 +76,7 @@
 
 <script>
 import axios from "axios";
-import { mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 
 export default {
   name: "CreateConsultation",
@@ -70,11 +88,14 @@ export default {
       create_mode: false,
       consultation: {
         matter: null,
+        message: null,
         subject: "Seleccione la materia",
       },
     };
   },
   methods: {
+    ...mapMutations(["addConsultation"]),
+    ...mapActions(["sendConsultationMessage"]),
     toogleCreateMode() {
       this.create_mode = !this.create_mode;
     },
@@ -92,10 +113,17 @@ export default {
       })
         .then((res) => {
           console.log(res);
-          /* if (Array.isArray(res.data) && res.data.length > 0) {
-            console.log(res.data);
-            commit("setUserSubjects", res.data);
-          } */
+          if (Array.isArray(res.data) && res.data.length > 0) {
+            this.addConsultation(res.data[0]);
+            let data_message = {
+              consulta: parseInt(res.data[0].id),
+              msg: this.consultation.message,
+            };
+            this.sendConsultationMessage(data_message);
+            this.toogleCreateMode();
+          } else {
+            alert(res.data.result.error_msg);
+          }
         })
         .catch((error) => {
           console.log(error);
