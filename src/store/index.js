@@ -84,6 +84,13 @@ export default createStore({
     setConsultation(state, consultation) {
       state.consultation = consultation;
     },
+    removeConsultation(state, id_consultation){
+      state.consultations.forEach((consultation, index) => {
+        if(parseInt(consultation.id) == id_consultation){
+          state.consultations.splice(index,1);
+        }
+      });
+    }
   },
   actions: {
     searcher({ commit }, payload) {
