@@ -53,15 +53,77 @@
           <span class="block mr-3">Mensaje: </span>
           <textarea
             class=" w-max text-white rounded-lg px-3 py-1 | outline-none bg-white bg-opacity-10 backdrop-filter backdrop-blur-xl shadow-2xl"
-            v-model="messages[0].content"
+            v-model="consultation.body"
             cols="35"
             rows="4"
             disabled
           ></textarea>
+          <div class="flex mt-3">
+            <button
+              @click="toogleNewMessageMode()"
+              class="ml-auto px-2 py-1 bg-blue-500 hover:bg-blue-600 transition-colors ease-linear duration-100 rounded-lg"
+            >
+              Responder
+              <i class="fas fa-comment"></i>
+            </button>
+          </div>
         </div>
 
         <div class="mt-5 pb-2">
           <h3 class="pl-3 text-xl">Respuestas</h3>
+
+          <div class="my-2 mx-8">
+            <p class="text-center" v-if="consultation.messages.length == 0">
+              Aún no hay respuestas
+            </p>
+            <div
+              class=" flex mb-2"
+              v-for="message in consultation.messages"
+              :key="message.id"
+            >
+              <div
+                class="bg-gray-700  pr-5 py-0.5 rounded-3xl rounded-tl-sm w-full"
+              >
+                <span class="pl-2 text-xs font-bold flex justify-between"
+                  ><span>{{ message.name }} {{ message.surname }}</span>
+                  <span>{{ message.date }}</span></span
+                >
+                <p class="pl-8">{{ message.content }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-show="new_message_mode" class="flex justify-center mt-2 py-2">
+          <div>
+            <label for="new_message" class=" block text-sm"
+              >Nueva respuesta:</label
+            >
+            <textarea
+              class="text-sm w-96 text-white rounded-lg px-3 py-1 | outline-none bg-white bg-opacity-10 backdrop-filter backdrop-blur-xl shadow-2xl"
+              v-model="new_message"
+              autofocus="autofocus"
+              id="new_message"
+              cols="30"
+              rows="5"
+            ></textarea>
+            <div class="flex mt-0.5">
+              <button
+                @click="toogleNewMessageMode()"
+                class="text-sm ml-auto px-2 py-0.5 bg-red-500 hover:bg-red-600 transition-colors ease-linear duration-100 rounded-lg"
+              >
+                Cancelar
+                <i class="fas fa-times"></i>
+              </button>
+              <button
+                @click="sendMessage()"
+                class="text-sm ml-1 px-2 py-0.5 bg-green-500 hover:bg-green-600 transition-colors ease-linear duration-100 rounded-lg"
+              >
+                Enviar
+                <i class="fas fa-reply"></i>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -69,18 +131,18 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 import axios from "axios";
 
 export default {
   name: "Consultation",
   data: function() {
     return {
-      messages: ["Esperando datos"],
+      new_message: "",
     };
   },
   computed: {
-    ...mapState(["API_URL", "headers", "consultation"]),
+    ...mapState(["API_URL", "headers", "consultation", "new_message_mode"]),
   },
   created() {
     var id = this.$route.params.id;
@@ -89,10 +151,19 @@ export default {
     } else if (parseInt(this.consultation.id) != parseInt(id)) {
       this.getConsultation(id);
     }
-    this.getConsultationMessages(id);
   },
   methods: {
-    ...mapMutations(["setConsultation",'removeConsultation']),
+    ...mapMutations([
+      "setConsultation",
+      "removeConsultation",
+      "toogleNewMessageMode",
+      "setNewMessage"
+    ]),
+    ...mapActions(["getConsultationMessages", "sendConsultationMessage"]),
+    sendMessage() {
+      this.setNewMessage(this.new_message);
+      this.sendConsultationMessage(parseInt(this.consultation.id));
+    },
     async getConsultation(id) {
       let data = `consulta=${id}`;
       await axios({
@@ -102,28 +173,11 @@ export default {
       })
         .then((res) => {
           if (Array.isArray(res.data) && res.data.length > 0) {
+            res.data[0].messages = [];
             this.setConsultation(res.data[0]);
+            this.getConsultationMessages(id);
           } else {
-            console.log("Error: syncConsultations ->" + res.data);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    async getConsultationMessages(id) {
-      let data = `consulta=${id}`;
-      await axios({
-        method: "get",
-        url: this.API_URL + `/consulta-mensaje?${data}`,
-        headers: this.headers,
-      })
-        .then((res) => {
-          console.log(res);
-          if (Array.isArray(res.data) && res.data.length > 0) {
-            this.messages = res.data;
-          } else {
-            console.log("Error: getConsultationMessages ->" + res.data);
+            console.log("Error: getConsultation ->" + res.data);
           }
         })
         .catch((error) => {
@@ -131,7 +185,7 @@ export default {
         });
     },
     async closeConsultation() {
-      let data = { "consulta": parseInt(this.consultation.id) };
+      let data = { consulta: parseInt(this.consultation.id) };
       await axios({
         method: "delete",
         url: this.API_URL + "/consulta",
@@ -140,7 +194,7 @@ export default {
       })
         .then((res) => {
           if (parseInt(res.data) == 1) {
-            this.$router.push('/inicio');
+            this.$router.push("/inicio");
             this.removeConsultation(parseInt(this.consultation.id));
           } else {
             console.log("Error: closeConsultation ->" + res.data);
