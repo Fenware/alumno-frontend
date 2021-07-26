@@ -220,10 +220,7 @@ export default createStore({
           console.log(error);
         });
     },
-    async sendConsultationMessage(
-      { state, dispatch, commit },
-      id_consultation
-    ) {
+    async sendConsultationMessage({ state, dispatch, commit },id_consultation) {
       let data = {
         consulta: id_consultation,
         msg: state.new_message,
@@ -235,6 +232,7 @@ export default createStore({
         headers: state.headers,
       })
         .then((res) => {
+          console.log(res);
           commit("toogleNewMessageMode");
           if (res.data == 1) {
             dispatch(
