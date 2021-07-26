@@ -18,12 +18,12 @@
               {{ consultation.subject_name }}
             </span>
           </div>
-          <button
-            @click="closeConsultation()"
-            class="text-sm text-white rounded-full px-3 py-0.5 | bg-red-500 hover:bg-opacity-80 transition-all ease-linear backdrop-filter backdrop-blur-xl shadow-2xl"
+          <router-link
+            :to="{ name: 'Home' }"
+            class="text-sm text-white rounded-full px-3 py-0.5 | bg-gray-700 border-2 border-gray-400 hover:bg-opacity-80 transition-all ease-linear backdrop-filter backdrop-blur-xl shadow-2xl"
           >
-            Cerrar consulta
-          </button>
+            <i class="fas fa-reply"></i>
+          </router-link>
         </div>
 
         <div class="flex items-center mx-20 mb-2">
@@ -50,7 +50,7 @@
         </div>
 
         <div class="  mx-20">
-          <span class="block mr-3">Mensaje: </span>
+          <span class="block mr-3">Descripción: </span>
           <textarea
             class=" w-max text-white rounded-lg px-3 py-1 | outline-none bg-white bg-opacity-10 backdrop-filter backdrop-blur-xl shadow-2xl"
             v-model="consultation.body"
@@ -125,6 +125,16 @@
             </div>
           </div>
         </div>
+        <div class="flex justify-center py-2">
+          <button
+            @click="closeConsultation()"
+            class="text-lg text-white rounded-full px-10 py-0.5 | bg-red-500 hover:bg-opacity-80 transition-all ease-linear backdrop-filter backdrop-blur-xl shadow-2xl"
+          >
+            <i class="fas fa-exclamation-triangle"></i>
+
+            Terminar consulta
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -157,9 +167,10 @@ export default {
       "setConsultation",
       "removeConsultation",
       "toogleNewMessageMode",
-      "setNewMessage"
+      "setNewMessage",
+      "setConsultationStateAnswered",
     ]),
-    ...mapActions(["getConsultationMessages", "sendConsultationMessage"]),
+    ...mapActions(["getConsultationMessages"]),
     sendMessage() {
       this.setNewMessage(this.new_message);
       this.sendConsultationMessage(parseInt(this.consultation.id));
