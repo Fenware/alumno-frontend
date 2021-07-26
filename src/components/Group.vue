@@ -24,7 +24,9 @@
           Unirse
         </button>
       </div>
-      <span class="text-xs ml-2 text-yellow-200">* Código de grupo que te proporcionaron los administradores</span>
+      <span class="text-xs ml-2 text-yellow-200"
+        >* Código de grupo que te proporcionaron los administradores</span
+      >
     </div>
 
     <div class="" v-else>
@@ -50,44 +52,24 @@
 
 <script>
 import axios from "axios";
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "Groups",
   data: function() {
     return {
-      group: null,
       group_code: "",
     };
   },
   computed: {
-    ...mapState(["API_URL", "headers"]),
-  },
-  created() {
-    this.getUserGroup();
+    ...mapState(["API_URL", "headers", "group"]),
   },
   methods: {
-    async getUserGroup() {
-      await axios({
-        method: "get",
-        url: this.API_URL + "/user-grupo",
-        headers: this.headers,
-      })
-        .then((res) => {
-          console.log(res);
-          if (Array.isArray(res.data) && res.data.length > 0) {
-            this.group = res.data[0];
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
+    ...mapActions(["getUserGroup"]),
     async takeGroup() {
       let data = {
         code: this.group_code,
       };
-
       await axios({
         method: "post",
         url: this.API_URL + "/user-grupo",

@@ -1,5 +1,5 @@
 <template>
-  <div class="" v-if="currentRouteName() == 'Login' || currentRouteName() == 'Register'">
+  <div v-if="currentRouteName() == 'Login' || currentRouteName() == 'Register'">
     <router-view />
   </div>
   <div class="flex items-center min-h-screen max-h-screen max-w-screen" v-else>
@@ -8,7 +8,7 @@
     >
       <Navbar />
       <Main />
-      <!-- <Sidebar /> -->
+      <Sidebar />
     </div>
   </div>
 </template>
@@ -16,25 +16,25 @@
 import { mapActions } from "vuex";
 import Navbar from "@/components/Navbar";
 import Main from "@/components/Main";
-/* import Sidebar from "@/components/Sidebar"; */
+import Sidebar from "@/components/Sidebar";
 
 export default {
   components: {
     Navbar,
     Main,
-    /* Sidebar, */
+    Sidebar,
   },
   methods: {
     ...mapActions(["syncToken"]),
     currentRouteName() {
       return this.$route.name;
-    }
+    },
   },
-  beforeCreated(){
-    if(this.currentRouteName() != "Register"){
+  beforeCreated() {
+    if (this.currentRouteName() != "Register") {
       this.syncToken();
     }
-  }
+  },
 };
 </script>
 
@@ -60,5 +60,19 @@ body {
 }
 .w-90per {
   width: 95%;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-track {
+  background: #ddd;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #666;
 }
 </style>
