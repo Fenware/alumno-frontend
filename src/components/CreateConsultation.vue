@@ -94,7 +94,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["addConsultation"]),
+    ...mapMutations(["addConsultation",'setNewMessage']),
     ...mapActions(["sendConsultationMessage"]),
     toogleCreateMode() {
       this.create_mode = !this.create_mode;
@@ -115,11 +115,8 @@ export default {
           console.log(res);
           if (Array.isArray(res.data) && res.data.length > 0) {
             this.addConsultation(res.data[0]);
-            let data_message = {
-              consulta: parseInt(res.data[0].id),
-              msg: this.consultation.message,
-            };
-            this.sendConsultationMessage(data_message);
+            this.setNewMessage(this.consultation.message);
+            this.sendConsultationMessage(parseInt(res.data[0].id));
             this.toogleCreateMode();
           } else {
             alert(res.data.result.error_msg);
