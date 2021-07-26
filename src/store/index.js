@@ -15,7 +15,11 @@ export default createStore({
       subject_name: "Esperando datos",
       teacher_name: "Esperando datos",
       theme: "Esperando datos",
+      body: "Esperando datos",
+      messages: [],
     },
+    new_message: "",
+    new_message_mode: false,
     consultations: [],
     user: {
       id: null,
@@ -84,13 +88,25 @@ export default createStore({
     setConsultation(state, consultation) {
       state.consultation = consultation;
     },
-    removeConsultation(state, id_consultation){
+    removeConsultation(state, id_consultation) {
       state.consultations.forEach((consultation, index) => {
-        if(parseInt(consultation.id) == id_consultation){
-          state.consultations.splice(index,1);
+        if (parseInt(consultation.id) == id_consultation) {
+          state.consultations.splice(index, 1);
         }
       });
-    }
+    },
+    setNewMessage(state, message){
+      state.new_message = message;
+    },
+    toogleNewMessageMode(state) {
+      state.new_message_mode = !state.new_message_mode;
+    },
+    setConsultationBody(state, body) {
+      state.consultation.body = body;
+    },
+    setConsultationMessages(state, messages) {
+      state.consultation.messages = messages;
+    },
   },
   actions: {
     searcher({ commit }, payload) {
@@ -204,12 +220,14 @@ export default createStore({
           console.log(error);
         });
     },
-    async sendConsultationMessage({state}, message_data){
+    async sendConsultationMessage(
+      { state, dispatch, commit },
+      id_consultation
+    ) {
       let data = {
-        consulta: message_data.consulta,
-        msg: message_data.msg,
+        consulta: id_consultation,
+        msg: state.new_message,
       };
-      console.log(data);
       await axios({
         method: "post",
         url: state.API_URL + "/consulta-mensaje",
@@ -217,17 +235,40 @@ export default createStore({
         headers: state.headers,
       })
         .then((res) => {
-          console.log(res);
-          /* if (Array.isArray(res.data) && res.data.length > 0) {
-            this.addConsultation(res.data[0]);
-          }else{
+          commit("toogleNewMessageMode");
+          if (res.data == 1) {
+            dispatch(
+              "getConsultationMessages",
+              parseInt(state.consultation.id)
+            );
+          } else {
             alert(res.data.result.error_msg);
-          } */
+          }
         })
         .catch((error) => {
           console.log(error);
         });
-    }
+    },
+    async getConsultationMessages({ state, commit }, id) {
+      let data = `consulta=${id}`;
+      await axios({
+        method: "get",
+        url: state.API_URL + `/consulta-mensaje?${data}`,
+        headers: state.headers,
+      })
+        .then((res) => {
+          if (Array.isArray(res.data) && res.data.length > 0) {
+            commit("setConsultationBody", res.data[0].content);
+            res.data.splice(0, 1);
+            commit("setConsultationMessages", res.data);
+          } else {
+            console.log("Error: getConsultationMessages ->" + res.data);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
   getters: {
     subjectsFiltered(state) {
