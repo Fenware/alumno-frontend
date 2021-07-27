@@ -9,15 +9,6 @@
             <i :class="'fa-home ' + icon_class"></i>
           </router-link>
         </li>
-        <li>
-            <i :class="'fa-users ' + icon_class"></i>
-        </li>
-        <li>
-            <i :class="'fa-book ' + icon_class"></i>
-        </li>
-        <li class="cursor-pointer">
-          <i :class="'fa-user ' + icon_class"></i>
-        </li>
       </div>
       <div>
         <li class="cursor-pointer">
