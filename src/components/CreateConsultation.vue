@@ -6,7 +6,7 @@
     <p class="text-center text-xl my-1">Crear Consulta</p>
 
     <div class="px-7 mt-4">
-      <label class="block pl-1 text-sm" for="matter">Materia</label>
+      <label class="block pl-1 text-sm">Materia</label>
       <select
         name="subjects"
         class="mb-4 px-2 py-1.5 rounded-lg bg-white bg-opacity-30 backdrop-filter backdrop-blur-xl outline-none"
@@ -42,7 +42,12 @@
 
       <div class="flex mb-1">
         <button
-          @click="createConsultation()"
+          @click="
+            consultation.matter.trim() != '' &&
+            consultation.message.trim() != ''
+              ? createConsultation()
+              : focusInput()
+          "
           class="block mx-auto mt-5 py-2 px-5 | text-white rounded-lg shadow-lg transition-all ease-in-out hover:shadow-xl cursor-pointer bg-green-500 bg-opacity-25 hover:bg-opacity-40 outline-none focus:ring-4 ring-green-500  ring-opacity-20"
         >
           Enviar consulta
@@ -87,44 +92,55 @@ export default {
     return {
       create_mode: false,
       consultation: {
-        matter: null,
-        message: null,
+        matter: "",
+        message: "",
         subject: "Seleccione la materia",
       },
     };
   },
   methods: {
-    ...mapMutations(["addConsultation",'setNewMessage']),
+    ...mapMutations(["addConsultation", "setNewMessage"]),
     ...mapActions(["sendConsultationMessage"]),
+    focusInput() {
+      if (this.consultation.matter.trim() == "") {
+        document.getElementById("matter").focus();
+      } else if (this.consultation.message.trim() == "") {
+        document.getElementById("message").focus();
+      }
+    },
     toogleCreateMode() {
       this.create_mode = !this.create_mode;
     },
     async createConsultation() {
-      let data = {
-        materia: parseInt(this.consultation.subject),
-        asunto: this.consultation.matter,
-      };
-      console.log(data);
-      await axios({
-        method: "post",
-        url: this.API_URL + "/consulta",
-        data: data,
-        headers: this.headers,
-      })
-        .then((res) => {
-          console.log(res);
-          if (Array.isArray(res.data) && res.data.length > 0) {
-            this.addConsultation(res.data[0]);
-            this.setNewMessage(this.consultation.message);
-            this.sendConsultationMessage(parseInt(res.data[0].id));
-            this.toogleCreateMode();
-          } else {
-            alert(res.data.result.error_msg);
-          }
+      if (this.consultation.subject != "Seleccione la materia") {
+        let data = {
+          materia: parseInt(this.consultation.subject),
+          asunto: this.consultation.matter,
+        };
+        console.log(data);
+        await axios({
+          method: "post",
+          url: this.API_URL + "/consulta",
+          data: data,
+          headers: this.headers,
         })
-        .catch((error) => {
-          console.log(error);
-        });
+          .then((res) => {
+            console.log(res);
+            if (Array.isArray(res.data) && res.data.length > 0) {
+              this.addConsultation(res.data[0]);
+              this.setNewMessage(this.consultation.message);
+              this.sendConsultationMessage(parseInt(res.data[0].id));
+              this.toogleCreateMode();
+            } else {
+              alert(res.data.result.error_msg);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }else{
+        alert('Tienes que elegir una materia!');
+      }
     },
   },
 };
