@@ -44,8 +44,8 @@ export default {
   data: function() {
     return {
       user: {
-        user: "mateo@alumno.com",
-        password: "1234",
+        user: "",
+        password: "",
         type: "student",
       },
     };
