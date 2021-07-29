@@ -3,7 +3,7 @@ services:
     vue-ui-alumno:
         build:
             context: ./
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.dev
         ports:
         - "8083:8080"
         container_name: vue-ui-alumno
