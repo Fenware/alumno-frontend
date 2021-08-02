@@ -41,9 +41,12 @@ export default {
   computed: {
     ...mapState(["consultations"]),
   },
+  created() {
+    this.syncConsultations();
+  },
   methods: {
     ...mapMutations(["setConsultation"]),
-    ...mapActions(["getConsultationMessages"]),
+    ...mapActions(["getConsultationMessages","syncConsultations"]),
     viewConsultation(consultation) {
       consultation.messages = [];
       this.setConsultation(consultation);
