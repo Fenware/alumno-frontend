@@ -39,7 +39,7 @@ import { mapActions, mapMutations, mapState } from "vuex";
 export default {
   name: "ConsultationsContainer",
   computed: {
-    ...mapState(["consultations", "subjects"]),
+    ...mapState(["consultations"]),
   },
   methods: {
     ...mapMutations(["setConsultation"]),
