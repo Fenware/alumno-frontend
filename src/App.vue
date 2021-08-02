@@ -30,10 +30,8 @@ export default {
       return this.$route.name;
     },
   },
-  beforeCreated() {
-    if (this.currentRouteName() != "Register") {
-      this.syncToken();
-    }
+  created() {
+    this.syncToken();
   },
 };
 </script>
