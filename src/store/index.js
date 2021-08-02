@@ -117,23 +117,25 @@ export default createStore({
         commit("setToken", localStorage.getItem("token"));
         commit("setHeaderToken", "Bearer " + localStorage.getItem("token"));
       } else {
-        commit("setToken", null);
-        router.push("login");
+        /* router.push("login"); */
+        console.log();
       }
     },
-    async login({ commit, state }, payload) {
+    async login({ commit, state, dispatch }, payload) {
       await axios({
         method: "post",
         url: state.API_URL + "/auth",
         data: payload,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
         .then((res) => {
-          console.log(res);
-          if (typeof res.data.result.token == 'string') {
+          if (typeof res.data.result.token == "string") {
             let token = res.data.result.token;
             commit("setToken", token);
             localStorage.setItem("token", token);
+            dispatch("syncToken");
             router.push("/inicio");
           } else {
             console.log("Error: login");
@@ -146,11 +148,11 @@ export default createStore({
     },
     logout({ commit }) {
       commit("setToken", null);
-      commit("clearUserData");
+      commit("setHeaderToken", "");
       localStorage.removeItem("token");
       router.push("login");
     },
-    async checkSession({ commit, state }) {
+    async checkSession({ state, dispatch }) {
       await axios({
         method: "post",
         url: state.API_URL + "/token",
@@ -160,9 +162,7 @@ export default createStore({
         .then((res) => {
           console.log(res);
           if (res.data != "OK") {
-            commit("setToken", null);
-            localStorage.removeItem("token");
-            router.push("login");
+            dispatch("logout");
           }
         })
         .catch((error) => {
