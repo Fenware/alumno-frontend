@@ -11,12 +11,12 @@ const routes = [
   {
     path: "/registro",
     name: "Register",
-    component: Register
+    component: Register,
   },
   {
     path: "/login",
     name: "Login",
-    component: Login
+    component: Login,
   },
   {
     path: "/inicio",
@@ -46,12 +46,13 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const routeProtected = to.matched.some((record) => record.meta.requireAuth);
   // Verificando la session en cada ruta
-  store.dispatch('syncToken');
+  store.dispatch("syncToken");
   if (routeProtected) {
-    store.dispatch("checkSession");
-    if (store.state.token !== null) {
-      next();
-    }
+    store.dispatch("checkSession").then(() => {
+      if (store.state.token !== null) {
+        next();
+      }
+    });
   } else if (to.fullPath == "/login" || to.fullPath == "/registro") {
     if (store.state.token !== null) {
       next({ name: "Home" });
