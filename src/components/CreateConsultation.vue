@@ -16,8 +16,8 @@
         <option
           class="text-black cursor-pointer"
           v-for="subject in subjects"
-          :key="subject.id_subject"
-          :value="subject.id_subject"
+          :key="subject.id"
+          :value="subject.id"
           >{{ subject.name }}</option
         >
       </select>
