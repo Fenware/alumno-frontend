@@ -95,7 +95,7 @@ export default createStore({
         }
       });
     },
-    setNewMessage(state, message){
+    setNewMessage(state, message) {
       state.new_message = message;
     },
     toogleNewMessageMode(state) {
@@ -181,6 +181,7 @@ export default createStore({
             if (state.subjects == null) {
               dispatch("getUserSubjects");
             }
+            dispatch("wsConnection");
           }
         })
         .catch((error) => {
@@ -222,7 +223,10 @@ export default createStore({
           console.log(error);
         });
     },
-    async sendConsultationMessage({ state, dispatch, commit },id_consultation) {
+    async sendConsultationMessage(
+      { state, dispatch, commit },
+      id_consultation
+    ) {
       let data = {
         consulta: id_consultation,
         msg: state.new_message,
@@ -268,6 +272,29 @@ export default createStore({
         .catch((error) => {
           console.log(error);
         });
+    },
+    wsConnection({ state }) {
+      console.log(state.token);
+      require("../utils/websockets");
+      // eslint-disable-next-line no-undef
+      var conn = new ab.Session(
+        `ws://localhost:8085?token=${state.token}`,
+        function() {
+          conn.subscribe(`${state.group.id_group}`, function(topic, data) {
+            // This is where you would add the new article to the DOM (beyond the scope of this tutorial)
+            console.log(
+              'New article published to category "' +
+                topic +
+                '" : '
+                );
+                console.log(data);
+          });
+        },
+        function() {
+          console.warn("WebSocket connection closed");
+        },
+        { skipSubprotocolCheck: true }
+      );
     },
   },
   getters: {
