@@ -1,16 +1,18 @@
 <template>
   <nav
-    class="w-1/6 md:w-16 lg:w-16 h-full rounded-3xl | bg-white bg-opacity-10 backdrop-filter backdrop-blur-xl shadow-2xl"
+    class="w-full sm:w-1/6 md:w-16 lg:w-16 sm:h-full rounded-2xl | bg-gray-700 border-r-2 border-t-2 border-b-2 border-gray-700  bg-opacity-10 backdrop-filter backdrop-blur-xl shadow-2xl"
   >
-    <ul class="pt-4 h-full text-center flex flex-col justify-between">
-      <div>
+    <ul
+      class="p-2 sm:py-4 sm:px-0 h-full text-center flex flex-row sm:flex-col justify-between"
+    >
+      <div class="flex gap-2 sm:gap-0 sm:block">
         <li>
           <router-link :to="{ name: 'Home' }" class="cursor-pointer">
             <i :class="'fa-home ' + icon_class"></i>
           </router-link>
         </li>
       </div>
-      <div>
+      <div class="flex gap-2 sm:gap-0 sm:block">
         <li class="cursor-pointer">
           <router-link :to="{ name: 'Configuration' }" class="cursor-pointer">
             <i :class="'fa-cog ' + icon_class"></i>
@@ -34,7 +36,7 @@ export default {
   data: function() {
     return {
       icon_class:
-        "fas mt-6 text-3xl text-white duration-500 ease-in-out  transition-colors transition-transform filter hover:text-gray-200 transform hover:scale-110 drop-shadow-lg",
+        "fas sm:mt-6 text-3xl text-white transition-colors transition-transform duration-500 ease-in-out filter hover:text-gray-200 transform hover:scale-110 drop-shadow-lg",
     };
   },
   methods: {
