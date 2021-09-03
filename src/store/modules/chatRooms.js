@@ -9,6 +9,7 @@ export default {
     chats: [],
     chat: null,
     user_subjects: [],
+    ws_connection: null
   },
   mutations: {
     setChats(state, chats) {
@@ -29,6 +30,9 @@ export default {
     pushNewChat(state, chat) {
       state.chats.push(chat);
     },
+    setWsConnection(state, conn){
+      state.ws_connection = conn;
+    }
   },
   actions: {
     async getChatRooms({ rootState, commit }) {
@@ -125,7 +129,7 @@ export default {
     wsChatRoomsConnection({ rootState, commit }) {
       require("@/utils/websockets");
       // eslint-disable-next-line no-undef
-      var conn = new ab.Session(
+      let conn = new ab.Session(
         `ws://localhost:8085?token=${rootState.token}`,
         function() {
           conn.subscribe(`${rootState.group.id_group}`, function(topic, data) {
@@ -142,8 +146,11 @@ export default {
     },
     wsMessagesConnection({ rootState, state, commit }) {
       require("@/utils/websockets");
+      if(state.ws_connection){
+        state.ws_connection.close();
+      }
       // eslint-disable-next-line no-undef
-      var conn = new ab.Session(
+      let conn = new ab.Session(
         `ws://localhost:8086?token=${rootState.token}`,
         function() {
           conn.subscribe(`${state.chat.id}`, function(topic, data) {
@@ -154,10 +161,11 @@ export default {
           });
         },
         function() {
-          console.warn("WebSocket connection closed");
+          /* console.warn("WebSocket connection closed"); */
         },
         { skipSubprotocolCheck: true }
       );
+      commit("setWsConnection", conn);
     },
   },
 };
