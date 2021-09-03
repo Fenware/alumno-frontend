@@ -5,6 +5,7 @@ import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Configuration from "../views/Configuration.vue";
 import Consultation from "../views/Consultation.vue";
+import ChatRooms from "../views/ChatRooms.vue";
 
 const routes = [
   { path: "/", redirect: "/inicio" },
@@ -28,6 +29,12 @@ const routes = [
     path: "/consulta/:id",
     name: "Consultation",
     component: Consultation,
+    meta: { requireAuth: true },
+  },
+  {
+    path: "/salas-de-chat",
+    name: "ChatRooms",
+    component: ChatRooms,
     meta: { requireAuth: true },
   },
   {
