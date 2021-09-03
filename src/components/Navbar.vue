@@ -6,11 +6,19 @@
       class="p-2 sm:py-4 sm:px-0 h-full text-center flex flex-row sm:flex-col justify-between"
     >
       <div class="flex gap-2 sm:gap-0 sm:block">
+
         <li>
           <router-link :to="{ name: 'Home' }" class="cursor-pointer">
             <i :class="'fa-home ' + icon_class"></i>
           </router-link>
         </li>
+
+        <li>
+          <router-link :to="{ name: 'ChatRooms' }" class="cursor-pointer">
+            <i :class="'fa-comments ' + icon_class"></i>
+          </router-link>
+        </li>
+
       </div>
       <div class="flex gap-2 sm:gap-0 sm:block">
         <li class="cursor-pointer">
