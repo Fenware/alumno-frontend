@@ -3,7 +3,7 @@
     class="flex justify-between text-white w-full min-h-full"
     style="min-width: 15rem;"
   >
-    <div class="w-full">
+    <div class="w-full flex justify-center items-center">
       <TheChat v-if="!create_chat_mode && chat != null" />
 
       <div
@@ -14,44 +14,35 @@
       </div>
 
       <div
-        class="flex w-8/12 mx-auto py-2 items-center"
+        class="w-9/12 mx-auto py-2"
         v-show="create_chat_mode"
       >
         <div
           class="bg-gray-700 px-5 py-2 rounded-xl border-2 border-gray-600 w-full"
         >
           <p class="text-2xl text-center">Crear sala de chat</p>
-          <div class="flex justify-between gap-4">
+          <div class="">
             <div class="mt-4">
               <p class="text-center mb-1">Ingrese el tema a tratar</p>
 
-              <input
-                v-model="matter"
-                class="w-72 block mx-auto text-md bg-white p-1 bg-opacity-20 rounded-md outline-none"
-                maxlength="50"
-                type="text"
-              />
-              <span class="text-xs text-yellow-500 pl-2"
-                >* máximo 50 caracteres</span
-              >
-              <div class="flex justify-around">
-                <button @click="create()" class="btn-success mt-5 px-5">
-                  Crear sala
-                </button>
-                <button
-                  @click="create_chat_mode = !create_chat_mode"
-                  class="btn-danger mt-5 px-5"
+              <div class=" ">
+                <input
+                  v-model="matter"
+                  class="w-72 block mx-auto text-md bg-white p-1 bg-opacity-20 rounded-md outline-none"
+                  maxlength="50"
+                  type="text"
+                />
+                <span class="block text-center text-xs text-yellow-500 pl-2"
+                  >* máximo 50 caracteres</span
                 >
-                  Cancelar
-                </button>
               </div>
             </div>
 
             <div class="mt-4">
               <p class="text-center">Seleccione la materia</p>
-              <div class="grid grid-cols-2">
+              <div class="grid grid-cols-2 gap-2 max-h-80 overflow-y-auto">
                 <div
-                  class="flex cursor-pointer items-center justify-between m-2 p-2
+                  class="flex cursor-pointer items-center justify-between  p-2 min-w-full
                       bg-gray-700 bg-opacity-90 border-2 border-gray-600 rounded-xl transform transition-transform transition-colors hover:bg-gray-600"
                   :id="'subject_' + subject.id"
                   v-for="subject in user_subjects"
@@ -72,6 +63,18 @@
                   ></i>
                 </div>
               </div>
+            </div>
+
+            <div class="flex justify-around">
+              <button @click="create()" class="btn-success mt-5 px-5">
+                Crear sala
+              </button>
+              <button
+                @click="create_chat_mode = !create_chat_mode"
+                class="btn-danger mt-5 px-5"
+              >
+                Cancelar
+              </button>
             </div>
           </div>
         </div>
@@ -115,9 +118,9 @@
                 >
                   {{ chat.subject_name }}
                 </p>
-                <span class="text-xs pr-3 select-none">{{
-                  getHour(chat.creation_date)
-                }}</span>
+                <span class="text-xs pr-3 select-none"
+                  >{{ getHour(chat.creation_date) }}
+                </span>
               </div>
               <p
                 class="text-sm pl-5 pt-0.5 text-gray-300 truncate"
@@ -188,8 +191,13 @@ export default {
     getHour(date) {
       // Formateo la fecha a español
       let date_formated = moment(date).locale("es");
-      date_formated = moment(date_formated).calendar();
-      /* return moment(date_formated).format('LT'); */
+      console.log(moment(date_formated).calendar().length);
+      console.log(moment(date_formated).calendar());
+      if (moment(date_formated).calendar().length > 15) {
+        date_formated = moment(date_formated).format("l");
+      } else {
+        date_formated = moment(date_formated).calendar();
+      }
       return date_formated;
     },
     toggleSubject(subject_id) {
