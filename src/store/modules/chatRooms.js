@@ -88,7 +88,6 @@ export default {
         headers: rootState.headers,
       })
         .then((res) => {
-          console.log(res.data);
           if (Array.isArray(res.data)) {
             commit("setMessages", res.data);
           } else {
@@ -154,6 +153,7 @@ export default {
         `ws://localhost:8086?token=${rootState.token}`,
         function() {
           conn.subscribe(`${state.chat.id}`, function(topic, data) {
+            console.log(data);
             if (data.msg != null) {
               commit("pushMessage", data.msg);
             }
