@@ -12,7 +12,7 @@
 
       <div
         id="chat"
-        class="flex flex-col pl-5 pr-12 max-h-96 overflow-y-auto mx-5 xl:w-9/12 xl:mx-auto"
+        class="flex gap-1 flex-col pl-5 pr-12 max-h-96 overflow-y-auto mx-5 xl:w-9/12 xl:mx-auto"
       >
         <div
           v-for="(message, index) in chat.messages"
@@ -20,11 +20,11 @@
           :class="
             isTheLastMeesageSamePerson(message.id_user, index)
               ? isTheAuthorOfTheMessage(message.id_user)
-                ? 'ml-auto bg-indigo-700 mt-0.5'
-                : 'bg-gray-700 mt-0.5'
+                ? 'ml-auto bg-indigo-500 mt-0'
+                : 'bg-gray-700 mt-0'
               : isTheAuthorOfTheMessage(message.id_user)
-              ? 'ml-auto bg-indigo-700 rounded-tr-sm'
-              : 'bg-gray-700 rounded-tl-sm'
+              ? 'ml-auto bg-indigo-500 rounded-tr-sm'
+              : 'bg-gray-700 rounded-tl-sm mt-3'
           "
           class="w-max px-2 py-1 rounded-2xl"
         >
@@ -110,10 +110,6 @@ export default {
   methods: {
     ...mapActions(["sendMessageToChat"]),
     sendMessage() {
-      /* let data = {
-        chat: payload.id,
-        msg: payload.new_message,
-      }; */
       this.sendMessageToChat({ id: this.chat.id, message: this.new_message });
       this.new_message = "";
     },
