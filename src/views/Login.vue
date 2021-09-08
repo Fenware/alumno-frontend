@@ -22,13 +22,13 @@
         />
       </div>
       <input
-        class="block mx-auto mt-10 py-2 px-10 | text-white rounded-lg shadow-lg transition-all ease-in-out hover:shadow-xl cursor-pointer bg-gray-50 bg-opacity-25 hover:bg-opacity-40 outline-none focus:ring-4 ring-white ring-opacity-20"
+        class="block mx-auto px-10 text-lg mt-10 btn-success"
         type="submit"
         value="Ingresar"
       />
       <div class="text-center text-white mt-2">
         <span class="block mb-3">O</span>
-        <router-link :to="{ name: 'Register' }" class=" mx-auto py-2 px-5 | text-white rounded-lg shadow-lg transition-all ease-in-out hover:shadow-xl cursor-pointer bg-gray-50 bg-opacity-25 hover:bg-opacity-40 outline-none focus:ring-4 ring-white ring-opacity-20">
+        <router-link :to="{ name: 'Register' }" class=" mx-auto btn-info">
           Registro
         </router-link>
       </div>
