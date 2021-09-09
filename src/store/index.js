@@ -5,12 +5,14 @@ import axios from "axios";
 import auth from "./modules/auth";
 import chatRooms from "./modules/chatRooms";
 import userProfile from "./modules/userProfile";
+import teachers from "./modules/teachers";
 
 export default createStore({
   modules:{
     auth,
     chatRooms,
-    userProfile
+    userProfile,
+    teachers
   },
   state: {
     API_URL: process.env.VUE_APP_ROOT_API,
