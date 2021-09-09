@@ -191,8 +191,6 @@ export default {
     getHour(date) {
       // Formateo la fecha a español
       let date_formated = moment(date).locale("es");
-      console.log(moment(date_formated).calendar().length);
-      console.log(moment(date_formated).calendar());
       if (moment(date_formated).calendar().length > 15) {
         date_formated = moment(date_formated).format("l");
       } else {
