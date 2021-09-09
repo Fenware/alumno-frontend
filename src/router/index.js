@@ -6,6 +6,7 @@ import Register from "../views/Register.vue";
 import Configuration from "../views/Configuration.vue";
 import Consultation from "../views/Consultation.vue";
 import ChatRooms from "../views/ChatRooms.vue";
+import Teachers from "../views/Teachers.vue";
 
 const routes = [
   { path: "/", redirect: "/inicio" },
@@ -35,6 +36,12 @@ const routes = [
     path: "/salas-de-chat",
     name: "ChatRooms",
     component: ChatRooms,
+    meta: { requireAuth: true },
+  },
+  {
+    path: "/profesores",
+    name: "Teachers",
+    component: Teachers,
     meta: { requireAuth: true },
   },
   {
