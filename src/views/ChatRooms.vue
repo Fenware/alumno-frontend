@@ -13,10 +13,7 @@
         <p class="text-2xl">Seleccione un chat</p>
       </div>
 
-      <div
-        class="w-9/12 mx-auto py-2"
-        v-show="create_chat_mode"
-      >
+      <div class="w-9/12 mx-auto py-2" v-show="create_chat_mode">
         <div
           class="bg-gray-700 px-5 py-2 rounded-xl border-2 border-gray-600 w-full"
         >
@@ -82,14 +79,17 @@
     </div>
     <div class="h-92vh bg-gray-700 rounded-2xl shadow-xl">
       <div
-        class="flex justify-between items-center px-2 bg-gray-600 rounded-t-xl rounded-b-md"
+        class="flex justify-between items-center px-2 bg-gray-600 rounded-t-2xl rounded-b-md"
       >
         <h2 class="text-center text-2xl my-2 min-w-max">
           Salas de chat
         </h2>
 
         <button
-          @click="create_chat_mode = !create_chat_mode"
+          @click="
+            create_chat_mode = !create_chat_mode;
+            deselectChat(selected_chat);
+          "
           class="btn-success ml-5 text-sm py-0.5 px-3 border-0"
         >
           Crear
@@ -97,15 +97,15 @@
       </div>
 
       <div class=" overflow-y-auto px-2 mt-3" style="height: 80vh;">
-        <div class="" v-if="chats.length == 0">
-          <p>No tienes salas de chat activas</p>
+        <div class="flex items-center h-full" v-if="chats.length == 0">
+          <p class="min-w-max mx-3">No tienes salas de chat activas</p>
         </div>
         <div
-          @click="openChat(chat)"
+          @click="openChat(chatRoom)"
           class=" text-white my-1 mb-0.5 py-3 px-2 hover:bg-gray-800 hover:bg-opacity-40 transition-colors rounded-xl cursor-pointer"
-          v-for="chat in chats"
-          :key="chat.id"
-          :id="'chat_' + chat.id"
+          v-for="chatRoom in chats"
+          :key="chatRoom.id"
+          :id="'chat_' + chatRoom.id"
         >
           <div class="select-none">
             <div>
@@ -116,31 +116,19 @@
                   class="ml-2 font-semibold px-1 rounded-md select-none truncate"
                   style="max-width: 12rem;"
                 >
-                  {{ chat.subject_name }}
+                  {{ chatRoom.subject_name }}
                 </p>
                 <span class="text-xs pr-3 select-none"
-                  >{{ getHour(chat.creation_date) }}
+                  >{{ getHour(chatRoom.creation_date) }}
                 </span>
               </div>
               <p
-                class="text-sm pl-5 pt-0.5 text-gray-300 truncate"
+                class="text-sm font-medium pl-5 pt-0.5 text-gray-300 truncate"
                 style="max-width: 15rem;"
               >
-                {{ chat.theme }}
+                {{ chatRoom.theme }}
               </p>
             </div>
-            <!-- <div
-                v-show="chat.state == 2"
-                class="rounded-full mr-2 text-green-500"
-              >
-                <i class="fas fa-check-circle"></i>
-              </div>
-              <div
-                v-show="chat.state == 1"
-                class="rounded-full mr-2 text-gray-800"
-              >
-                <i class="far fa-circle"></i>
-              </div> -->
           </div>
         </div>
       </div>
@@ -160,7 +148,7 @@ export default {
       create_chat_mode: false,
       matter: "",
       subject_id: null,
-      chat_selected: null,
+      selected_chat: null,
     };
   },
   components: {
@@ -240,7 +228,6 @@ export default {
       this.matter = "";
     },
     openChat(chat) {
-      /* this.getConsultation(chat.id); */
       this.create_chat_mode = false;
       this.setChat(chat);
       this.getChatMesages(chat.id);
@@ -253,16 +240,24 @@ export default {
       div.classList.remove("hover:bg-gray-800");
       div.classList.remove("hover:bg-opacity-40");
 
-      if (this.chat_selected != null && this.chat_selected != id) {
+      if (this.selected_chat != null && this.selected_chat != id) {
         let selected_div = document.getElementById(
-          "chat_" + this.chat_selected
+          "chat_" + this.selected_chat
         );
         selected_div.classList.remove("bg-indigo-600");
         selected_div.classList.add("hover:bg-gray-800");
         selected_div.classList.add("hover:bg-opacity-40");
       }
 
-      this.chat_selected = id;
+      this.selected_chat = id;
+    },
+    deselectChat(id) {
+      if (id) {
+        let div = document.getElementById("chat_" + id);
+        div.classList.remove("bg-indigo-600");
+        div.classList.add("hover:bg-gray-800");
+        div.classList.add("hover:bg-opacity-40");
+      }
     },
   },
 };
