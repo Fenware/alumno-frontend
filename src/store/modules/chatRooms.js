@@ -9,14 +9,18 @@ export default {
     chats: [],
     chat: null,
     user_subjects: [],
-    ws_connection: null
+    ws_messages_connection: null,
+    ws_chat_rooms_connection: null
   },
   mutations: {
     setChats(state, chats) {
       state.chats = chats;
     },
     setChat(state, chat) {
+      // Arreglar, que haya un endpoint para obtener participantes
+      let messages = state.chat && state.chat.messages ? state.chat.messages : [] ;
       state.chat = chat;
+      state.chat.messages = messages;
     },
     setMessages(state, messages) {
       state.chat.messages = messages;
@@ -30,8 +34,11 @@ export default {
     pushNewChat(state, chat) {
       state.chats.push(chat);
     },
-    setWsConnection(state, conn){
-      state.ws_connection = conn;
+    setWsMessagesConnection(state, conn){
+      state.ws_messages_connection = conn;
+    },
+    setWsChatRoomsConnection(state, conn){
+      state.ws_chat_rooms_connection = conn;
     },
     clearChat(state){
       state.chat = null;
@@ -167,8 +174,11 @@ export default {
           console.log(error);
         });
     },
-    wsChatRoomsConnection({ rootState, commit }) {
+    wsChatRoomsConnection({ rootState, commit, state }) {
       require("@/utils/websockets");
+      if(state.ws_chat_rooms_connection){
+        state.ws_chat_rooms_connection.close();
+      }
       // eslint-disable-next-line no-undef
       let conn = new ab.Session(
         `ws://localhost:8085?token=${rootState.token}`,
@@ -186,11 +196,12 @@ export default {
         },
         { skipSubprotocolCheck: true }
       );
+      commit("setWsChatRoomsConnection", conn);
     },
     wsMessagesConnection({ rootState, state, commit }) {
       require("@/utils/websockets");
-      if(state.ws_connection){
-        state.ws_connection.close();
+      if(state.ws_messages_connection){
+        state.ws_messages_connection.close();
       }
       // eslint-disable-next-line no-undef
       let conn = new ab.Session(
@@ -203,11 +214,11 @@ export default {
           });
         },
         function() {
-          /* console.warn("WebSocket connection closed"); */
+          console.warn("WebSocket connection messages closed");
         },
         { skipSubprotocolCheck: true }
       );
-      commit("setWsConnection", conn);
+      commit("setWsMessagesConnection", conn);
     },
   },
 };
