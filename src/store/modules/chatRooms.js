@@ -32,6 +32,16 @@ export default {
     },
     setWsConnection(state, conn){
       state.ws_connection = conn;
+    },
+    clearChat(state){
+      state.chat = null;
+    },
+    removeChatRoom(state, chat_id){
+      state.chats.forEach((chatRoom, index) => {
+        if(parseInt(chatRoom.id) == chat_id){
+          state.chats.splice(1, index);
+        }
+      });
     }
   },
   actions: {
@@ -47,6 +57,26 @@ export default {
           if (Array.isArray(res.data)) {
             // LLamo a la funcion logout
             commit("setChats", res.data);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async getChatRoomById({ rootState, commit }, chat_id) {
+      await axios({
+        method: "get",
+        url: rootState.API_URL + `/chat?chat=${chat_id}`,
+        headers: rootState.headers,
+      })
+        .then((res) => {
+          console.log(res);
+          if (!("result" in res.data)) {
+            // LLamo a la funcion logout
+            commit("setChat", res.data);
+          }else{
+            console.log("Error -> getChatRoomById");
+            console.log(res.data);
           }
         })
         .catch((error) => {
@@ -91,7 +121,7 @@ export default {
           if (Array.isArray(res.data)) {
             commit("setMessages", res.data);
           } else {
-            alert(res.data.result.error_msg);
+            showAlert({ type: "error", message: res.data.result.error_msg });
           }
         })
         .catch((error) => {
@@ -110,16 +140,28 @@ export default {
         headers: rootState.headers,
       })
         .then((res) => {
-          console.log(res);
-          /* commit("toogleNewMessageMode");
-          if (res.data == 1) {
-            dispatch(
-              "getConsultationMessages",
-              parseInt(state.consultation.id)
-            );
-          } else {
-            alert(res.data.result.error_msg);
-          } */
+          if (res.data != 1) {
+            showAlert({ type: "error", message: res.data.result.error_msg });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async closeChatRoom({ rootState }, chat_id) {
+      await axios({
+        method: "delete",
+        url: rootState.API_URL + "/chat",
+        data: chat_id,
+        headers: rootState.headers,
+      })
+        .then((res) => {
+          if (res.data != 1) {
+            showAlert({
+              type: "info",
+              message: "Sala de chat terminada correctamente",
+            });
+          } 
         })
         .catch((error) => {
           console.log(error);
@@ -132,8 +174,10 @@ export default {
         `ws://localhost:8085?token=${rootState.token}`,
         function() {
           conn.subscribe(`${rootState.group.id_group}`, function(topic, data) {
-            if (data.chat != null) {
+            if ("chat" in data) {
               commit("pushNewChat", data.chat);
+            }else if("close" in data){
+              commit("removeChatRoom", data.close);
             }
           });
         },
@@ -153,11 +197,9 @@ export default {
         `ws://localhost:8086?token=${rootState.token}`,
         function() {
           conn.subscribe(`${state.chat.id}`, function(topic, data) {
-            console.log(data);
             if (data.msg != null) {
               commit("pushMessage", data.msg);
             }
-            console.log(data);
           });
         },
         function() {
