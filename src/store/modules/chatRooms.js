@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
-
 // Modulo donde manejo las alertas
 import showAlert from "@/utils/alerts";
 
@@ -9,8 +8,9 @@ export default {
     chats: [],
     chat: null,
     user_subjects: [],
+    socket: null,
     ws_messages_connection: null,
-    ws_chat_rooms_connection: null
+    ws_chat_rooms_connection: null,
   },
   mutations: {
     setChats(state, chats) {
@@ -18,7 +18,8 @@ export default {
     },
     setChat(state, chat) {
       // Arreglar, que haya un endpoint para obtener participantes
-      let messages = state.chat && state.chat.messages ? state.chat.messages : [] ;
+      let messages =
+        state.chat && state.chat.messages ? state.chat.messages : [];
       state.chat = chat;
       state.chat.messages = messages;
     },
@@ -34,21 +35,24 @@ export default {
     pushNewChat(state, chat) {
       state.chats.push(chat);
     },
-    setWsMessagesConnection(state, conn){
+    setWsMessagesConnection(state, conn) {
       state.ws_messages_connection = conn;
     },
-    setWsChatRoomsConnection(state, conn){
+    setWsChatRoomsConnection(state, conn) {
       state.ws_chat_rooms_connection = conn;
     },
-    clearChat(state){
+    clearChat(state) {
       state.chat = null;
     },
-    removeChatRoom(state, chat_id){
+    removeChatRoom(state, chat_id) {
       state.chats.forEach((chatRoom, index) => {
-        if(parseInt(chatRoom.id) == chat_id){
-          state.chats.splice(1, index);
+        if (parseInt(chatRoom.id) == chat_id) {
+          state.chats.splice(index, 1);
         }
       });
+    },
+    setSocket(state, socket){
+      state.socket = socket;
     }
   },
   actions: {
@@ -81,7 +85,7 @@ export default {
           if (!("result" in res.data)) {
             // LLamo a la funcion logout
             commit("setChat", res.data);
-          }else{
+          } else {
             console.log("Error -> getChatRoomById");
             console.log(res.data);
           }
@@ -90,12 +94,11 @@ export default {
           console.log(error);
         });
     },
-    async createChatRoom({ rootState, commit }, chatRoomData) {
+    async createChatRoom({ rootState, commit, state }, payload) {
       let data = {
-        materia: parseInt(chatRoomData.subject),
-        asunto: chatRoomData.matter,
+        materia: parseInt(payload.subject),
+        asunto: payload.matter,
       };
-      console.log(data);
       await axios({
         method: "post",
         url: rootState.API_URL + "/chat",
@@ -104,7 +107,8 @@ export default {
       })
         .then((res) => {
           console.log(res);
-          if (res.data == 1) {
+          if (!("result" in res.data)) {
+            state.socket.emit("room:create", res.data);
             showAlert({
               type: "success",
               message: "Sala de chat creada correctamente",
@@ -155,7 +159,7 @@ export default {
           console.log(error);
         });
     },
-    async closeChatRoom({ rootState }, chat_id) {
+    async closeChatRoom({ rootState, state }, chat_id) {
       await axios({
         method: "delete",
         url: rootState.API_URL + "/chat",
@@ -163,19 +167,32 @@ export default {
         headers: rootState.headers,
       })
         .then((res) => {
-          if (res.data != 1) {
+          console.log(res);
+          if (res.data == 1) {
+            let wsData = {
+              id_group: rootState.group.id_group,
+              chat: chat_id.chat
+            }
+            state.socket.emit("room:delete", wsData);
             showAlert({
               type: "info",
-              message: "Sala de chat terminada correctamente",
+              message: "Sala de chat te rminada correctamente",
             });
-          } 
+          }
         })
         .catch((error) => {
           console.log(error);
         });
     },
     wsChatRoomsConnection({ rootState, commit, state }) {
-      require("@/utils/websockets");
+      state.socket.on(`room:${rootState.group.id_group}`, (data) => {
+        commit("pushNewChat", data);
+      });
+      state.socket.on(`room:delete_${rootState.group.id_group}`, (data) => {
+        console.log(data);
+        commit("removeChatRoom", data.chat);
+      });
+      /* require("@/utils/websockets");
       if(state.ws_chat_rooms_connection){
         state.ws_chat_rooms_connection.close();
       }
@@ -196,11 +213,11 @@ export default {
         },
         { skipSubprotocolCheck: true }
       );
-      commit("setWsChatRoomsConnection", conn);
+      commit("setWsChatRoomsConnection", conn); */
     },
     wsMessagesConnection({ rootState, state, commit }) {
       require("@/utils/websockets");
-      if(state.ws_messages_connection){
+      if (state.ws_messages_connection) {
         state.ws_messages_connection.close();
       }
       // eslint-disable-next-line no-undef
