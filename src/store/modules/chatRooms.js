@@ -51,9 +51,9 @@ export default {
         }
       });
     },
-    setSocket(state, socket){
+    setSocket(state, socket) {
       state.socket = socket;
-    }
+    },
   },
   actions: {
     async getChatRooms({ rootState, commit }) {
@@ -139,7 +139,7 @@ export default {
           console.log(error);
         });
     },
-    async sendMessageToChat({ rootState }, payload) {
+    async sendMessageToChat({ rootState, state }, payload) {
       let data = {
         chat: parseInt(payload.id),
         msg: payload.message,
@@ -151,7 +151,11 @@ export default {
         headers: rootState.headers,
       })
         .then((res) => {
-          if (res.data != 1) {
+          if (!("result" in res.data)) {
+            console.log(res.data);
+            state.socket.emit("chat:sendMessage", res.data);
+          }
+          else{  
             showAlert({ type: "error", message: res.data.result.error_msg });
           }
         })
@@ -171,8 +175,8 @@ export default {
           if (res.data == 1) {
             let wsData = {
               id_group: rootState.group.id_group,
-              chat: chat_id.chat
-            }
+              chat: chat_id.chat,
+            };
             state.socket.emit("room:delete", wsData);
             showAlert({
               type: "info",
@@ -189,53 +193,13 @@ export default {
         commit("pushNewChat", data);
       });
       state.socket.on(`room:delete_${rootState.group.id_group}`, (data) => {
-        console.log(data);
         commit("removeChatRoom", data.chat);
       });
-      /* require("@/utils/websockets");
-      if(state.ws_chat_rooms_connection){
-        state.ws_chat_rooms_connection.close();
-      }
-      // eslint-disable-next-line no-undef
-      let conn = new ab.Session(
-        `ws://localhost:8085?token=${rootState.token}`,
-        function() {
-          conn.subscribe(`${rootState.group.id_group}`, function(topic, data) {
-            if ("chat" in data) {
-              commit("pushNewChat", data.chat);
-            }else if("close" in data){
-              commit("removeChatRoom", data.close);
-            }
-          });
-        },
-        function() {
-          console.warn("WebSocket connection closed");
-        },
-        { skipSubprotocolCheck: true }
-      );
-      commit("setWsChatRoomsConnection", conn); */
     },
-    wsMessagesConnection({ rootState, state, commit }) {
-      require("@/utils/websockets");
-      if (state.ws_messages_connection) {
-        state.ws_messages_connection.close();
-      }
-      // eslint-disable-next-line no-undef
-      let conn = new ab.Session(
-        `ws://localhost:8086?token=${rootState.token}`,
-        function() {
-          conn.subscribe(`${state.chat.id}`, function(topic, data) {
-            if (data.msg != null) {
-              commit("pushMessage", data.msg);
-            }
-          });
-        },
-        function() {
-          console.warn("WebSocket connection messages closed");
-        },
-        { skipSubprotocolCheck: true }
-      );
-      commit("setWsMessagesConnection", conn);
-    },
+    wsMessagesConnection({ state, commit }) {
+      state.socket.on(`chat:message_${state.chat.id}`, (data) => {
+        commit("pushMessage", data);
+      });
+    }
   },
 };
