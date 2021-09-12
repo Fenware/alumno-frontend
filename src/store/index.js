@@ -100,7 +100,6 @@ export default createStore({
             if (state.subjects == null) {
               dispatch("getUserSubjects");
             }
-            dispatch("wsChatRoomsConnection");
           }
         })
         .catch((error) => {
