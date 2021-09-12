@@ -140,6 +140,7 @@
 import { mapActions, mapMutations, mapState } from "vuex";
 import TheChat from "@/components/TheChat.vue";
 import moment from "moment";
+import io from "socket.io-client";
 
 export default {
   name: "ChatRooms",
@@ -149,6 +150,7 @@ export default {
       matter: "",
       subject_id: null,
       selected_chat: null,
+      socket: io("http://localhost:3500"),
     };
   },
   components: {
@@ -157,7 +159,10 @@ export default {
   created() {
     this.getChatRooms();
     this.getUserData();
-    this.getUserGroup();
+    this.getUserGroup().then(() => {
+      this.setSocket(this.socket);
+      this.wsChatRoomsConnection();
+    });
   },
   computed: {
     ...mapState({
@@ -167,7 +172,7 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(["setChat"]),
+    ...mapMutations(["setChat", "setSocket"]),
     ...mapActions([
       "getChatRooms",
       "createChatRoom",
@@ -175,6 +180,7 @@ export default {
       "getUserData",
       "getChatMesages",
       "wsMessagesConnection",
+      "wsChatRoomsConnection",
     ]),
     getHour(date) {
       // Formateo la fecha a español
