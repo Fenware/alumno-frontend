@@ -18,16 +18,15 @@ export default {
     },
     setChat(state, chat) {
       // Arreglar, que haya un endpoint para obtener participantes
-      let messages =
-        state.chat && state.chat.messages ? state.chat.messages : [];
       state.chat = chat;
-      state.chat.messages = messages;
     },
     setMessages(state, messages) {
-      state.chat.messages = messages;
+      state.chats.find(
+        (chat) => chat.id == messages[0].id_query
+      ).messages = messages;
     },
     pushMessage(state, message) {
-      state.chat.messages.push(message);
+      state.chats.find(chat => chat.id == message.id_query).messages.push(message);
     },
     setUserSubjects(state, subjects) {
       state.user_subjects = subjects;
@@ -56,7 +55,7 @@ export default {
     },
   },
   actions: {
-    async getChatRooms({ rootState, commit }) {
+    async getChatRooms({ rootState, commit, dispatch }) {
       await axios({
         method: "get",
         url: rootState.API_URL + "/chat",
@@ -68,6 +67,11 @@ export default {
           if (Array.isArray(res.data)) {
             // LLamo a la funcion logout
             commit("setChats", res.data);
+            res.data.forEach((chat) => {
+              console.log(chat);
+              dispatch("getChatMesages", chat.id);
+            });
+            dispatch("wsMessagesConnection");
           }
         })
         .catch((error) => {
@@ -153,9 +157,8 @@ export default {
         .then((res) => {
           if (!("result" in res.data)) {
             console.log(res.data);
-            state.socket.emit("chat:sendMessage", res.data);
-          }
-          else{  
+            state.socket.emit("room:newMessage", res.data);
+          } else {
             showAlert({ type: "error", message: res.data.result.error_msg });
           }
         })
@@ -189,17 +192,32 @@ export default {
         });
     },
     wsChatRoomsConnection({ rootState, commit, state }) {
-      state.socket.on(`room:${rootState.group.id_group}`, (data) => {
+      /* state.socket.on(`room:${rootState.group.id_group}`, (data) => {
         commit("pushNewChat", data);
       });
       state.socket.on(`room:delete_${rootState.group.id_group}`, (data) => {
         commit("removeChatRoom", data.chat);
+      }); */
+    }, 
+    wsMessagesConnection({ state, commit }) {
+      state.chats.forEach((chat) => {
+        let room = `room:${chat.id}`;
+
+        // Ingreso a la sala de chat
+        state.socket.emit("join:room", room);
+
+        //Por ahora no se usa, es para ver usuarios conectados
+        state.socket.on("roomUsers", (/* {room, users} */ data) => {
+          console.log("ws:roomUsers ->");
+          console.log(data);
+        });
+
+        state.socket.on("room:message", (data) => {
+          if(data.id_query == chat.id){
+            commit("pushMessage", data);
+          }
+        }); 
       });
     },
-    wsMessagesConnection({ state, commit }) {
-      state.socket.on(`chat:message_${state.chat.id}`, (data) => {
-        commit("pushMessage", data);
-      });
-    }
   },
 };
