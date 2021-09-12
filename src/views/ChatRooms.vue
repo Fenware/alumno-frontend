@@ -157,10 +157,10 @@ export default {
     TheChat,
   },
   created() {
+    this.setSocket(this.socket);
     this.getChatRooms();
     this.getUserData();
     this.getUserGroup().then(() => {
-      this.setSocket(this.socket);
       this.wsChatRoomsConnection();
     });
   },
@@ -179,7 +179,6 @@ export default {
       "getUserGroup",
       "getUserData",
       "getChatMesages",
-      "wsMessagesConnection",
       "wsChatRoomsConnection",
     ]),
     getHour(date) {
@@ -237,7 +236,6 @@ export default {
       this.create_chat_mode = false;
       this.setChat(chat);
       this.getChatMesages(chat.id);
-      this.wsMessagesConnection();
       this.toggleChatSelected(chat.id);
     },
     toggleChatSelected(id) {
