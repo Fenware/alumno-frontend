@@ -4,7 +4,7 @@
     style="min-width: 15rem;"
   >
     <div class="w-full flex justify-center items-center">
-      <TheChat v-if="!create_chat_mode && chat != null" @clearChatId="clearChatId()" />
+      <TheChat v-if="!create_chat_mode && chat != null" />
 
       <div
         class="flex justify-center items-center h-full"
@@ -149,7 +149,6 @@ export default {
       create_chat_mode: false,
       matter: "",
       subject_id: null,
-      selected_chat: null,
       socket: null,
     };
   },
@@ -172,11 +171,12 @@ export default {
       chats: (state) => state.chatRooms.chats,
       chat: (state) => state.chatRooms.chat,
       user_subjects: (state) => state.subjects,
+      selected_chat: (state) => state.chatRooms.selected_chat,
       headers: (state) => state.headers,
     }),
   },
   methods: {
-    ...mapMutations(["setChat", "setSocket"]),
+    ...mapMutations(["setChat", "setSocket","setChatId"]),
     ...mapActions([
       "getChatRooms",
       "createChatRoom",
@@ -257,7 +257,7 @@ export default {
         selected_div.classList.add("hover:bg-opacity-40");
       }
 
-      this.selected_chat = id;
+      this.setChatId(id);
     },
     deselectChat(id) {
       console.log(id);
@@ -268,9 +268,6 @@ export default {
         div.classList.add("hover:bg-opacity-40");
       }
     },
-    clearChatId(){
-      this.selected_chat = null;
-    }
   },
 };
 </script>
