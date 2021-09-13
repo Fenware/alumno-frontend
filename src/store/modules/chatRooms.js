@@ -37,12 +37,6 @@ export default {
     pushNewChat(state, chat) {
       state.chats.push(chat);
     },
-    setWsMessagesConnection(state, conn) {
-      state.ws_messages_connection = conn;
-    },
-    setWsChatRoomsConnection(state, conn) {
-      state.ws_chat_rooms_connection = conn;
-    },
     clearChat(state) {
       state.chat = null;
     },
@@ -218,6 +212,7 @@ export default {
     wsMessagesConnection({ state, commit }) {
       state.chats.forEach((chat) => {
         let room = `room:${chat.id}`;
+        console.log(state.socket);
 
         // Ingreso a la sala de chat
         state.socket.emit("join:room", room);
