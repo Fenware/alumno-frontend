@@ -265,6 +265,7 @@ export default {
           if (result.isConfirmed) {
             this.closeChatRoom({ chat: parseInt(this.chat.id) });
             this.modalClose();
+            this.$emit("clearChatId");
             this.clearChat();
           }
         });
