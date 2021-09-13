@@ -4,7 +4,7 @@
     style="min-width: 15rem;"
   >
     <div class="w-full flex justify-center items-center">
-      <TheChat v-if="!create_chat_mode && chat != null" />
+      <TheChat v-if="!create_chat_mode && chat != null" @clearChatId="clearChatId()" />
 
       <div
         class="flex justify-center items-center h-full"
@@ -150,13 +150,16 @@ export default {
       matter: "",
       subject_id: null,
       selected_chat: null,
-      socket: io("http://localhost:3500"),
+      socket: null,
     };
   },
   components: {
     TheChat,
   },
   created() {
+    this.socket = io("http://localhost:3500", {
+      auth: { token: this.headers },
+    });
     this.setSocket(this.socket);
     this.getChatRooms();
     this.getUserData();
@@ -169,6 +172,7 @@ export default {
       chats: (state) => state.chatRooms.chats,
       chat: (state) => state.chatRooms.chat,
       user_subjects: (state) => state.subjects,
+      headers: (state) => state.headers,
     }),
   },
   methods: {
@@ -256,6 +260,7 @@ export default {
       this.selected_chat = id;
     },
     deselectChat(id) {
+      console.log(id);
       if (id) {
         let div = document.getElementById("chat_" + id);
         div.classList.remove("bg-indigo-600");
@@ -263,6 +268,9 @@ export default {
         div.classList.add("hover:bg-opacity-40");
       }
     },
+    clearChatId(){
+      this.selected_chat = null;
+    }
   },
 };
 </script>
