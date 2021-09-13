@@ -156,7 +156,7 @@ export default {
     TheChat,
   },
   created() {
-    this.socket = io("http://localhost:3500", {
+    this.socket = io("http://localhost:3000", {
       auth: { token: this.headers },
     });
     this.setSocket(this.socket);
