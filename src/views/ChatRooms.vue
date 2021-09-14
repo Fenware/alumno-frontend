@@ -148,7 +148,6 @@ export default {
       create_chat_mode: false,
       matter: "",
       subject_id: null,
-      selected_chat: null,
     };
   },
   components: {
@@ -157,24 +156,27 @@ export default {
   created() {
     this.getChatRooms();
     this.getUserData();
-    this.getUserGroup();
+    this.getUserGroup().then(()=>{
+      this.listenRooms();
+    });
   },
   computed: {
     ...mapState({
       chats: (state) => state.chatRooms.chats,
       chat: (state) => state.chatRooms.chat,
       user_subjects: (state) => state.subjects,
+      selected_chat: (state) => state.chatRooms.selected_chat,
     }),
   },
   methods: {
-    ...mapMutations(["setChat"]),
+    ...mapMutations(["setChat","setChatId"]),
     ...mapActions([
       "getChatRooms",
       "createChatRoom",
       "getUserGroup",
       "getUserData",
-      "getChatMesages",
-      "wsMessagesConnection",
+      "getChatMessages",
+      "listenRooms"
     ]),
     getHour(date) {
       // Formateo la fecha a español
@@ -230,8 +232,8 @@ export default {
     openChat(chat) {
       this.create_chat_mode = false;
       this.setChat(chat);
-      this.getChatMesages(chat.id);
-      this.wsMessagesConnection();
+      this.getChatMessages(chat.id);
+     /*  this.wsMessagesConnection(); */
       this.toggleChatSelected(chat.id);
     },
     toggleChatSelected(id) {
@@ -249,7 +251,7 @@ export default {
         selected_div.classList.add("hover:bg-opacity-40");
       }
 
-      this.selected_chat = id;
+      this.setChatId(id);
     },
     deselectChat(id) {
       if (id) {
