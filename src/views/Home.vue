@@ -23,12 +23,10 @@ export default {
     CreateConsultation,
   },
   created() {
-    this.syncToken();
-    this.checkSession();
     this.getUserGroup();
   },
   methods: {
-    ...mapActions(["syncToken", "checkSession", "getUserGroup"]),
+    ...mapActions(["getUserGroup"]),
   },
 };
 </script>

@@ -197,24 +197,15 @@ export default {
     };
   },
   computed: {
-    ...mapState(["API_URL", "headers", "user"]),
+    ...mapState({
+      user: (state) => state.userProfile.user,
+      API_URL: (state) => state.API_URL,
+      headers: (state) => state.headers,
+    }),
   },
   methods: {
     ...mapMutations(["setUserData"]),
-    ...mapActions(["syncToken", "checkSession", "logout"]),
-    async getUserData() {
-      await axios({
-        method: "get",
-        url: this.API_URL + "/user",
-        headers: this.headers,
-      })
-        .then((res) => {
-          this.setUserData(res.data[0]);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
+    ...mapActions(["logout", "getUserData"]),
     async setUserAvatar(avatar) {
       let data = {
         nickname: this.user.nickname,
@@ -314,8 +305,6 @@ export default {
     },
   },
   created() {
-    this.syncToken();
-    this.checkSession();
     this.getUserData();
   },
 };

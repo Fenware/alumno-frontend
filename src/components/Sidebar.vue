@@ -21,18 +21,12 @@
 
 <script>
 import ConsultationsContainer from '@/components/ConsultationsContainer.vue';
-import { mapActions } from 'vuex';
 export default {
   name: "SidebarComponent",
   components:{
     ConsultationsContainer,
   },
-  methods:{
-    ...mapActions(["syncConsultations"])
-  },
-  created() {
-    this.syncConsultations();
-  },
+  
 };
 </script>
 

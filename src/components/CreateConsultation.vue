@@ -16,8 +16,8 @@
         <option
           class="text-black cursor-pointer"
           v-for="subject in subjects"
-          :key="subject.id_subject"
-          :value="subject.id_subject"
+          :key="subject.id"
+          :value="subject.id"
           >{{ subject.name }}</option
         >
       </select>
@@ -130,6 +130,7 @@ export default {
               this.addConsultation(res.data[0]);
               this.setNewMessage(this.consultation.message);
               this.sendConsultationMessage(parseInt(res.data[0].id));
+              this.clearInputs();
               this.toogleCreateMode();
             } else {
               alert(res.data.result.error_msg);
@@ -138,9 +139,14 @@ export default {
           .catch((error) => {
             console.log(error);
           });
-      }else{
-        alert('Tienes que elegir una materia!');
+      } else {
+        alert("Tienes que elegir una materia!");
       }
+    },
+    clearInputs() {
+      this.consultation.subject = "Seleccione la materia";
+      this.consultation.matter = "";
+      this.consultation.message = "";
     },
   },
 };

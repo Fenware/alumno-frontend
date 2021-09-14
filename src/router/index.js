@@ -5,18 +5,20 @@ import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Configuration from "../views/Configuration.vue";
 import Consultation from "../views/Consultation.vue";
+import ChatRooms from "../views/ChatRooms.vue";
+import Teachers from "../views/Teachers.vue";
 
 const routes = [
   { path: "/", redirect: "/inicio" },
   {
     path: "/registro",
     name: "Register",
-    component: Register
+    component: Register,
   },
   {
     path: "/login",
     name: "Login",
-    component: Login
+    component: Login,
   },
   {
     path: "/inicio",
@@ -28,6 +30,18 @@ const routes = [
     path: "/consulta/:id",
     name: "Consultation",
     component: Consultation,
+    meta: { requireAuth: true },
+  },
+  {
+    path: "/salas-de-chat",
+    name: "ChatRooms",
+    component: ChatRooms,
+    meta: { requireAuth: true },
+  },
+  {
+    path: "/profesores",
+    name: "Teachers",
+    component: Teachers,
     meta: { requireAuth: true },
   },
   {
@@ -45,23 +59,20 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const routeProtected = to.matched.some((record) => record.meta.requireAuth);
-  let redirectedFrom = to.redirectedFrom;
-  /* console.log(redirectedFrom);
-  console.log(to); */
+  // Verificando la session en cada ruta
+  store.dispatch("syncToken");
   if (routeProtected) {
-    if(store.state.token === null){
-      next({ name: "Login" });
-      console.log('Ruta protegida, token null');
-    }else{
+    store.dispatch("checkSession").then(() => {
+      if (store.state.token !== null) {
+        next();
+      }
+    });
+  } else if (to.fullPath == "/login" || to.fullPath == "/registro") {
+    if (store.state.token !== null) {
+      next({ name: "Home" });
+    } else {
       next();
     }
-    // ruta protegida es true
-    // token es nulo true, por ende redirigimos al inicio
-  } else if ((to.fullPath === "/login" || to.fullPath === "/registro") && store.state.token !== null) {
-    // En caso contrario sigue...
-    next({ name: redirectedFrom != undefined ? redirectedFrom : "Home" });
-  } else {
-    next();
   }
 });
 

@@ -39,11 +39,14 @@ import { mapActions, mapMutations, mapState } from "vuex";
 export default {
   name: "ConsultationsContainer",
   computed: {
-    ...mapState(["consultations", "subjects"]),
+    ...mapState(["consultations"]),
+  },
+  created() {
+    this.syncConsultations();
   },
   methods: {
     ...mapMutations(["setConsultation"]),
-    ...mapActions(["getConsultationMessages"]),
+    ...mapActions(["getConsultationMessages","syncConsultations"]),
     viewConsultation(consultation) {
       consultation.messages = [];
       this.setConsultation(consultation);
