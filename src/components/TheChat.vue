@@ -183,12 +183,17 @@ export default {
     // Borrando el chat al salir del componente
     this.clearChat();
   },
+  created() {
+    this.listenMessages();
+  },
   methods: {
     ...mapActions([
       "sendMessageToChat",
       "closeChatRoom",
       "getUserData",
       "getChatRoomById",
+      "listenMessages"
+      /* "getChatMessages", */
     ]),
     ...mapMutations(["clearChat"]),
     sendMessage() {
