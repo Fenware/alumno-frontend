@@ -159,7 +159,7 @@ export default createStore({
         .then((res) => {
           console.log(res);
           commit("toogleNewMessageMode");
-          if (res.data == 1) {
+          if (!("result" in res.data)) {
             dispatch(
               "getConsultationMessages",
               parseInt(state.consultation.id)
