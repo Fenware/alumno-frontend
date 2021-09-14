@@ -8,20 +8,20 @@
     >
       <Navbar />
       <Main />
-      <!-- <Sidebar /> -->
+      <Sidebar v-if="currentRouteName() == 'Home' || currentRouteName() == 'Consultation'"/>
     </div>
   </div>
 </template>
 <script>
 import Navbar from "@/components/Navbar";
 import Main from "@/components/Main";
-/* import Sidebar from "@/components/Sidebar"; */
+import Sidebar from "@/components/Sidebar";
 
 export default {
   components: {
     Navbar,
     Main,
-    /* Sidebar, */
+    Sidebar,
   },
   methods: {
     currentRouteName() {
