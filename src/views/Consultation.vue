@@ -154,7 +154,12 @@ export default {
     };
   },
   computed: {
-    ...mapState(["API_URL", "headers", "consultation", "new_message_mode"]),
+    ...mapState({
+      API_URL: (state) => state.API_URL,
+      headers: (state) => state.headers,
+      consultation: (state) => state.consultation,
+      new_message_mode: (state) => state.new_message_mode,
+    }),
   },
   created() {
     var id = this.$route.params.id;
@@ -179,7 +184,7 @@ export default {
     sendMessage() {
       this.setNewMessage(this.new_message);
       this.sendConsultationMessage(parseInt(this.consultation.id));
-      this.new_message = '';
+      this.new_message = "";
     },
     async getConsultation(id) {
       let data = `consulta=${id}`;
@@ -189,9 +194,9 @@ export default {
         headers: this.headers,
       })
         .then((res) => {
-          if (Array.isArray(res.data) && res.data.length > 0) {
-            res.data[0].messages = [];
-            this.setConsultation(res.data[0]);
+          if (!("result" in res.data)){
+            res.data.messages = [];
+            this.setConsultation(res.data);
             this.getConsultationMessages(id);
           } else {
             console.log("Error: getConsultation ->" + res.data);
