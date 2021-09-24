@@ -4,7 +4,7 @@ import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Configuration from "../views/Configuration.vue";
-import Consultation from "../views/Consultation.vue";
+import Consultations from "../views/Consultations.vue";
 import ChatRooms from "../views/ChatRooms.vue";
 import Teachers from "../views/Teachers.vue";
 
@@ -27,9 +27,9 @@ const routes = [
     meta: { requireAuth: true },
   },
   {
-    path: "/consulta/:id",
-    name: "Consultation",
-    component: Consultation,
+    path: "/consultas",
+    name: "Consultations",
+    component: Consultations,
     meta: { requireAuth: true },
   },
   {
