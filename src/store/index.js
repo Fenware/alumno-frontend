@@ -6,13 +6,15 @@ import auth from "./modules/auth";
 import chatRooms from "./modules/chatRooms";
 import userProfile from "./modules/userProfile";
 import teachers from "./modules/teachers";
+import consultations from "./modules/consultations";
 
 export default createStore({
-  modules:{
+  modules: {
     auth,
     chatRooms,
     userProfile,
-    teachers
+    teachers,
+    consultations
   },
   state: {
     API_URL: process.env.VUE_APP_ROOT_API,
@@ -55,34 +57,6 @@ export default createStore({
     setUserSubjects(state, subjects) {
       state.subjects = subjects;
     },
-    setConsultations(state, consultations) {
-      state.consultations = consultations;
-    },
-    addConsultation(state, consultation) {
-      state.consultations.push(consultation);
-    },
-    setConsultation(state, consultation) {
-      state.consultation = consultation;
-    },
-    removeConsultation(state, id_consultation) {
-      state.consultations.forEach((consultation, index) => {
-        if (parseInt(consultation.id) == id_consultation) {
-          state.consultations.splice(index, 1);
-        }
-      });
-    },
-    setNewMessage(state, message) {
-      state.new_message = message;
-    },
-    toogleNewMessageMode(state) {
-      state.new_message_mode = !state.new_message_mode;
-    },
-    setConsultationBody(state, body) {
-      state.consultation.body = body;
-    },
-    setConsultationMessages(state, messages) {
-      state.consultation.messages = messages;
-    },
   },
   actions: {
     searcher({ commit }, payload) {
@@ -95,6 +69,7 @@ export default createStore({
         headers: state.headers,
       })
         .then((res) => {
+          console.log(res);
           if (Array.isArray(res.data)) {
             commit("setGroup", res.data[0]);
             if (state.subjects == null) {
@@ -123,75 +98,7 @@ export default createStore({
         .catch((error) => {
           console.log(error);
         });
-    },
-    async syncConsultations({ state, commit }) {
-      await axios({
-        method: "get",
-        url: state.API_URL + "/consulta",
-        headers: state.headers,
-      })
-        .then((res) => {
-          console.log(res.data);
-          if (Array.isArray(res.data) && res.data.length > 0) {
-            commit("setConsultations", res.data);
-          } else {
-            console.log("Error: syncConsultations ->" + res.data);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    async sendConsultationMessage(
-      { state, dispatch, commit },
-      id_consultation
-    ) {
-      let data = {
-        consulta: id_consultation,
-        msg: state.new_message,
-      };
-      await axios({
-        method: "post",
-        url: state.API_URL + "/consulta-mensaje",
-        data: data,
-        headers: state.headers,
-      })
-        .then((res) => {
-          console.log(res);
-          commit("toogleNewMessageMode");
-          if (!("result" in res.data)) {
-            dispatch(
-              "getConsultationMessages",
-              parseInt(state.consultation.id)
-            );
-          } else {
-            alert(res.data.result.error_msg);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    async getConsultationMessages({ state, commit }, id) {
-      let data = `consulta=${id}`;
-      await axios({
-        method: "get",
-        url: state.API_URL + `/consulta-mensaje?${data}`,
-        headers: state.headers,
-      })
-        .then((res) => {
-          if (Array.isArray(res.data) && res.data.length > 0) {
-            commit("setConsultationBody", res.data[0].content);
-            res.data.splice(0, 1);
-            commit("setConsultationMessages", res.data);
-          } else {
-            console.log("Error: getConsultationMessages ->" + res.data);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
+    }
   },
   getters: {
     subjectsFiltered(state) {
@@ -203,9 +110,6 @@ export default createStore({
         }
       });
       return subjectsFiltered;
-    },
-    /* getGroups(state){
-      return state.groups;
-    } */
+    }
   },
 });
