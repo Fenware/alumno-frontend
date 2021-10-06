@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center  mx-auto">
     <div class="text-white rounded-xl | max-w-lg">
-      <div class="flex justify-between mb-3 items-center py-4 px-5">
+      <div class="flex justify-between items-center pt-4 pb-1 px-5">
         <div class="flex gap-2 select-none">
           <span
             class="text-sm text-white rounded-lg px-3 py-0.5 | bg-purple-500 backdrop-filter backdrop-blur-xl shadow-2xl"
@@ -37,23 +37,23 @@
       <div class="mx-20 mt-2">
         <span class="mr-3 text-sm font-bold">Consulta: </span>
         <p class="text-white  rounded-lg py-1 | outline-none">
-          {{consultation.body}}
+          {{ consultation.body }}
         </p>
         <div class="flex mt-3">
           <button
             @click="toogleNewMessageMode()"
-            class="ml-auto btn-success "
+            class="ml-auto flex items-center py-0.5 pl-1 btn-success "
           >
+            <span class="material-icons pb-0.5 mr-1">reply</span>
             Responder
-            <i class="fas fa-comment"></i>
           </button>
         </div>
       </div>
 
-      <div class="mt-5 pb-2">
+      <div class="mt-2 pb-2">
         <h3 class="pl-3 text-xl">Respuestas</h3>
 
-        <div class="my-2 mx-8">
+        <div class="my-2 mx-8 overflow-y-auto h-52">
           <p class="text-center" v-if="consultation.messages.length == 0">
             Aún no hay respuestas
           </p>
@@ -108,12 +108,16 @@
           </div>
         </div>
       </div>
+      <button @click="close()" class="block btn-danger mx-auto">
+        Terminar consulta
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
+import { confirmModal } from "@/utils/alerts";
 
 export default {
   name: "Consultation",
@@ -136,7 +140,11 @@ export default {
       "setNewMessage",
       "setConsultationStateAnswered",
     ]),
-    ...mapActions(["getConsultationMessages", "sendConsultationMessage"]),
+    ...mapActions([
+      "getConsultationMessages",
+      "sendConsultationMessage",
+      "closeConsultation",
+    ]),
     focusMessageInput() {
       document.getElementById("new_message").focus();
     },
@@ -145,6 +153,15 @@ export default {
       this.setNewMessage(this.new_message);
       this.sendConsultationMessage(parseInt(this.consultation.id));
       this.new_message = "";
+    },
+    close() {
+      let payload = {
+        text: "<p class='text-white'>¿Deseas terminar la consulta?</p>",
+        confirmButtonText: "Si, terminar consulta",
+        function: this.closeConsultation,
+        data: { id: this.consultation.id },
+      };
+      confirmModal(payload);
     },
   },
 };
