@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // Modulo donde manejo las alertas
-import showAlert from "@/utils/alerts";
+import {showAlert} from "@/utils/alerts";
 
 export default {
   state: {
