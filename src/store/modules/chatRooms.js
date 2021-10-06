@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // Modulo donde manejo las alertas
-import {showAlert} from "@/utils/alerts";
+import { showAlert } from "@/utils/alerts";
 
 export default {
   state: {
@@ -62,8 +62,8 @@ export default {
   actions: {
     async getChatRooms({ rootState, commit, state }) {
       await axios({
-        method: "get",
-        url: rootState.API_URL + "/chat",
+        method: "post",
+        url: rootState.API_URL + "/chat/getActiveChats",
         headers: rootState.headers,
       })
         .then((res) => {
@@ -87,9 +87,13 @@ export default {
         });
     },
     async getChatRoomById({ rootState, commit }, chat_id) {
+      let data = {
+        chat: parseInt(chat_id),
+      };
       await axios({
-        method: "get",
-        url: rootState.API_URL + `/chat?chat=${chat_id}`,
+        method: "post",
+        url: rootState.API_URL + `/chat/getChatById`,
+        data,
         headers: rootState.headers,
       })
         .then((res) => {
@@ -106,7 +110,7 @@ export default {
           console.log(error);
         });
     },
-    async createChatRoom({ rootState, commit }, chatRoomData) {
+    async createChatRoom({ rootState }, chatRoomData) {
       let data = {
         materia: parseInt(chatRoomData.subject),
         asunto: chatRoomData.matter,
@@ -114,12 +118,11 @@ export default {
       console.log(data);
       await axios({
         method: "post",
-        url: rootState.API_URL + "/chat",
-        data: data,
+        url: rootState.API_URL + "/chat/create",
+        data,
         headers: rootState.headers,
       })
         .then((res) => {
-          console.log(res);
           if (!("result" in res.data)) {
             showAlert({
               type: "success",
@@ -134,10 +137,13 @@ export default {
         });
     },
     async getChatMessages({ rootState, commit, state }, chat_id) {
-      let data = `chat=${chat_id}`;
+      let data ={
+        chat: parseInt(chat_id)
+      }
       await axios({
-        method: "get",
-        url: rootState.API_URL + `/chat-mensaje?${data}`,
+        method: "post",
+        url: rootState.API_URL + `/chat/getMessages`,
+        data,
         headers: rootState.headers,
       })
         .then((res) => {
@@ -167,7 +173,7 @@ export default {
       };
       await axios({
         method: "post",
-        url: rootState.API_URL + "/chat-mensaje",
+        url: rootState.API_URL + "/chat/postMessage",
         data: data,
         headers: rootState.headers,
       })
@@ -182,8 +188,8 @@ export default {
     },
     async closeChatRoom({ rootState, commit }, chat_id) {
       await axios({
-        method: "delete",
-        url: rootState.API_URL + "/chat",
+        method: "post",
+        url: rootState.API_URL + "/chat/closeChat",
         data: chat_id,
         headers: rootState.headers,
       })
