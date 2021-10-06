@@ -14,7 +14,7 @@ export default createStore({
     chatRooms,
     userProfile,
     teachers,
-    consultations
+    consultations,
   },
   state: {
     API_URL: process.env.VUE_APP_ROOT_API,
@@ -33,7 +33,6 @@ export default createStore({
     },
     new_message: "",
     new_message_mode: false,
-    consultations: [],
     token: null,
     headers: {
       Authorization: "",
@@ -64,12 +63,11 @@ export default createStore({
     },
     async getUserGroup({ state, dispatch, commit }) {
       await axios({
-        method: "get",
-        url: state.API_URL + "/user-grupo",
+        method: "post",
+        url: state.API_URL + "/user-group/getGroups",
         headers: state.headers,
       })
         .then((res) => {
-          console.log(res);
           if (Array.isArray(res.data)) {
             commit("setGroup", res.data[0]);
             if (state.subjects == null) {
@@ -83,22 +81,24 @@ export default createStore({
         });
     },
     async getUserSubjects({ state, commit }) {
+      let data = {
+        group: parseInt(state.group.id_group),
+      };
       await axios({
-        method: "get",
-        url:
-          state.API_URL +
-          `/orientacion-materia?id=${state.group.id_orientation}`,
+        method: "post",
+        url: state.API_URL + `/user-group/getGroupSubjects`,
+        data,
         headers: state.headers,
       })
         .then((res) => {
           if (Array.isArray(res.data) && res.data.length > 0) {
             commit("setUserSubjects", res.data);
           }
-        })
+        })  
         .catch((error) => {
           console.log(error);
         });
-    }
+    },
   },
   getters: {
     subjectsFiltered(state) {
@@ -110,6 +110,6 @@ export default createStore({
         }
       });
       return subjectsFiltered;
-    }
+    },
   },
 });
