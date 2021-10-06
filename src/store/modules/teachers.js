@@ -16,7 +16,7 @@ export default {
   },
   actions: {
     async getTeachers({ rootState, commit }) {
-      let data = { group: parseInt(rootState.group.id_group) };
+      let data = { group: parseInt(rootState.group.group.id_group) };
       await axios({
         method: "post",
         url: rootState.API_URL + `/group/getTeachersFromGroup`,
