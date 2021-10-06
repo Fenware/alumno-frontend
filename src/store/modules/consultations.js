@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
 // Modulo donde manejo las alertas
-import showAlert from "@/utils/alerts";
+import { showAlert } from "@/utils/alerts";
 
 export default {
   state: {
@@ -17,7 +17,7 @@ export default {
       body: "Esperando datos descripción",
       messages: [],
     },
-    new_message: "",
+    newMessage: null,
     new_message_mode: false,
     consultations: [],
   },
@@ -25,7 +25,7 @@ export default {
     setConsultations(state, consultations) {
       state.consultations = consultations;
     },
-    addConsultation(state, consultation) {
+    pushConsultation(state, consultation) {
       state.consultations.push(consultation);
     },
     setConsultation(state, consultation) {
@@ -39,9 +39,6 @@ export default {
         }
       });
     },
-    setNewMessage(state, message) {
-      state.new_message = message;
-    },
     toogleNewMessageMode(state) {
       state.new_message_mode = !state.new_message_mode;
     },
@@ -53,20 +50,37 @@ export default {
     },
     setConsultationStateAnswered(state, id) {
       state.consultations.forEach((consultation) => {
-        if (parseInt(consultation.id) == parseInt(id)){
+        if (parseInt(consultation.id) == parseInt(id)) {
           consultation.state = 2;
         }
       });
     },
-    pushMessage(state, message) {
+    pushConsultationMessage(state, message) {
       state.consultation.messages.push(message);
     },
+    clearConsultation(state) {
+      state.consultation = {
+        active: false,
+        creation_date: "Esperando datos",
+        group_name: "Esperando datos",
+        id: "Esperando datos",
+        state: 1,
+        subject_name: "Esperando datos",
+        teacher_name: "Esperando datos",
+        theme: "Esperando datos asunto",
+        body: "Esperando datos descripción",
+        messages: [],
+      };
+    },
+    setNewMessage(state, message){
+      state.newMessage = message;
+    }
   },
   actions: {
     async getConsultations({ rootState, commit }) {
       await axios({
-        method: "get",
-        url: rootState.API_URL + "/consulta",
+        method: "post",
+        url: rootState.API_URL + "/consultation/getActiveConsultations",
         headers: rootState.headers,
       })
         .then((res) => {
@@ -81,10 +95,11 @@ export default {
         });
     },
     async getConsultation({ rootState, commit, dispatch }, id) {
-      let data = `consulta=${id}`;
+      let data = { consulta: parseInt(id) };
       await axios({
-        method: "get",
-        url: rootState.API_URL + `/consulta?${data}`,
+        method: "post",
+        url: rootState.API_URL + `/consultation/getConsultationById`,
+        data,
         headers: rootState.headers,
       })
         .then((res) => {
@@ -101,35 +116,36 @@ export default {
           console.log(error);
         });
     },
-    async sendConsultationMessage({ rootState, state, commit }, id) {
+    async sendConsultationMessage({ state, rootState, commit }, payload) {
       let data = {
-        consulta: parseInt(id),
-        msg: state.new_message,
+        consulta: parseInt(payload),
+        msg: state.newMessage,
       };
       await axios({
         method: "post",
-        url: rootState.API_URL + "/consulta-mensaje",
+        url: rootState.API_URL + "/consultation/postMessage",
         data: data,
         headers: rootState.headers,
       })
         .then((res) => {
-          console.log(res);
           commit("toogleNewMessageMode");
           if (!("result" in res.data)) {
-            commit("pushMessage", res.data);
+            commit("pushConsultationMessage", res.data);
           } else {
-            alert(res.data.result.error_msg);
+            showAlert({ type: "error", message: res.data.result.error_msg });
           }
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    async getConsultationMessages({ rootState, commit }, id) {
-      let data = `consulta=${id}`;
+    async getConsultationMessages({ rootState, commit }, id) {  
+      let data = { consulta: parseInt(id) };
+
       await axios({
-        method: "get",
-        url: rootState.API_URL + `/consulta-mensaje?${data}`,
+        method: "post",
+        url: rootState.API_URL + `/consultation/getMessages`,
+        data,
         headers: rootState.headers,
       })
         .then((res) => {
@@ -146,20 +162,46 @@ export default {
           console.log(error);
         });
     },
-    async closeConsultation() {
-      let data = { consulta: parseInt(this.consultation.id) };
+    async closeConsultation({ rootState, commit }, payload) {
+      let data = { consulta: parseInt(payload.id) };
       await axios({
-        method: "delete",
-        url: this.API_URL + "/consulta",
-        data: data,
-        headers: this.headers,
+        method: "post",
+        url: rootState.API_URL + "/consultation/close",
+        data,
+        headers: rootState.headers,
       })
         .then((res) => {
-          if (parseInt(res.data) == 1) {
-            this.$router.push("/inicio");
-            this.removeConsultation(parseInt(this.consultation.id));
+          if (res.data == 1) {
+            commit("removeConsultation", parseInt(payload.id));
+            commit("clearConsultation");
           } else {
             console.log("Error: closeConsultation ->" + res.data);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async createConsultation({ rootState, commit, dispatch }, payload) {
+      let data = {
+        materia: parseInt(payload.subject),
+        asunto: payload.matter,
+      };
+      await axios({
+        method: "post",
+        url: rootState.API_URL + "/consultation/create",
+        data: data,
+        headers: rootState.headers,
+      })
+        .then((res) => {
+          if (Array.isArray(res.data)) {
+            commit("pushConsultation", res.data[0]);
+            commit("setNewMessage", payload.message);
+
+            payload.id = res.data[0].id;
+            dispatch("sendConsultationMessage", payload.id);
+          } else {
+            showAlert({ type: "error", message: res.data.result.error_msg });
           }
         })
         .catch((error) => {
