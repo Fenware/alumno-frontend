@@ -56,7 +56,7 @@
       </div>
       <div class="flex gap-2 sm:gap-0 sm:block  items-center">
         <li>
-          <router-link :to="{ name: 'Configuration' }" v-slot="{ isActive }">
+          <router-link :to="{ name: 'UserConfiguration' }" v-slot="{ isActive }">
             <span
               :class="[isActive && 'active']"
               class="nav-icon mt-1 material-icons"
