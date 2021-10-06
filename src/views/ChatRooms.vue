@@ -164,7 +164,7 @@ export default {
     ...mapState({
       chats: (state) => state.chatRooms.chats,
       chat: (state) => state.chatRooms.chat,
-      user_subjects: (state) => state.subjects,
+      user_subjects: (state) => state.group.subjects,
       selected_chat: (state) => state.chatRooms.selected_chat,
     }),
   },
