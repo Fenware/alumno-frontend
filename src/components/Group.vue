@@ -64,6 +64,9 @@ export default {
   computed: {
     ...mapState(["API_URL", "headers", "group"]),
   },
+  created() {
+    this.getUserGroup();
+  },
   methods: {
     ...mapActions(["getUserGroup"]),
     async takeGroup() {
