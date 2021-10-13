@@ -4,8 +4,12 @@
       Tus profesores
     </h2>
 
+    <h3 class="text-indigo-400 text-center text-xl font-semibold pt-1">
+      {{ group_name }}
+    </h3>
+
     <div
-      class="grid grid-cols-3 gap-4 m-10 mb-0 p-5
+      class="grid grid-cols-3 gap-4 m-5 mb-0 p-5
        text-white bg-gray-700 border-2 border-gray-600 rounded-xl overflow-y-auto"
       style="height: 75vh;"
     >
@@ -18,7 +22,7 @@
         <div class="flex items-center px-5">
           <div>
             <img
-              class="w-16"
+              style="min-width: 3rem;"
               :src="require('@/assets/avatars/' + teacher.avatar)"
             />
           </div>
@@ -44,7 +48,7 @@
           <p class="pl-3 font-bold select-none">Horarios de disponibilidad</p>
           <div class="m-5">
             <p
-              class="grid grid-cols-5"
+              class="grid grid-cols-5 border-b-t border-white"
               v-for="day in teacher.schedule"
               :key="day.day"
             >
@@ -75,16 +79,20 @@ export default {
         "4": "Jueves",
         "5": "Viernes",
       },
+      group_name: "Ninguno",
     };
   },
   computed: {
     ...mapState({
       teachers: (state) => state.teachers.teachers,
+      group: (state) => state.group.group,
     }),
   },
   created() {
     this.getUserGroup().then(() => {
       this.getTeachers();
+      console.log(this.group);
+      this.group_name = `${this.group.orientation_year} ${this.group.group_name} ${this.group.orientation_name}`;
     });
   },
   methods: {
