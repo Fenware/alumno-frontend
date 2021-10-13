@@ -212,6 +212,7 @@ export default {
       state.socket.emit("join:group", group);
 
       state.socket.on(`group:newGroup`, (data) => {
+        data.messages = [];
         commit("pushNewChat", data);
         dispatch("newWsMessagesConnection", data);
       });
