@@ -59,7 +59,7 @@ export default {
     },
     setSocket(state, socket) {
       state.socket = socket;
-    },
+    }
   },
   actions: {
     async getChatRooms({ rootState, commit, dispatch }) {
@@ -262,5 +262,8 @@ export default {
         }
       });
     },
+    closeSocketConnection({state}){
+      state.socket.disconnect();
+    }
   },
 };
