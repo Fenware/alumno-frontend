@@ -165,11 +165,15 @@ export default {
     });
 
     this.setSocket(this.socket);
+
     this.getChatRooms();
     this.getUserData();
     this.getUserGroup().then(() => {
       this.wsChatRoomsConnection();
     });
+  },
+  unmounted(){
+    this.closeSocketConnection();
   },
   computed: {
     ...mapState({
@@ -189,6 +193,7 @@ export default {
       "getUserData",
       "getChatMessages",
       "wsChatRoomsConnection",
+      "closeSocketConnection"
     ]),
     getHour(date) {
       // Formateo la fecha a español
