@@ -3,7 +3,7 @@ import { createStore } from "vuex";
 /* Modulos */
 import auth from "./modules/auth";
 import chatRooms from "./modules/chatRooms";
-import userProfile from "./modules/userProfile";
+import user from "./modules/user";
 import teachers from "./modules/teachers";
 import consultations from "./modules/consultations";
 import group from "./modules/group";
@@ -12,7 +12,7 @@ export default createStore({
   modules: {
     auth,
     chatRooms,
-    userProfile,
+    user,
     teachers,
     consultations,
     group
