@@ -5,7 +5,8 @@ import { showAlert } from "@/utils/alerts";
 export default {
   state: {
     user: {},
-  },
+    group_data: null,
+  }  ,
   mutations: {
     setUserData(state, user) {
       state.user = user;
@@ -13,6 +14,9 @@ export default {
     changeUser(state, edited_user) {
       state.user = { ...edited_user };
     },
+    setGroup(state, group){
+      state.group_data = group;
+    }
   },
   actions: {
     async getUserData({ rootState, commit }) {
@@ -81,6 +85,25 @@ export default {
               type: "error",
               message: `Hubo un error, intente nuevamente`,
             });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async getGroupByCode({ rootState, commit }, code) {
+      await axios({
+        method: "post",
+        url: rootState.API_URL + "/group/getGroupByCode",
+        data: {code},
+        headers: rootState.headers,
+      })
+        .then((res) => {
+          console.log(res);
+          if("code" in res.data){
+            commit("setGroup", res.data);
+          }else{
+            commit("setGroup", null);
           }
         })
         .catch((error) => {
