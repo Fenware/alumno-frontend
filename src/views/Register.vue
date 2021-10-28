@@ -1,6 +1,10 @@
 <template>
-  <div class="antialiased sans-serif text-white h-full  items-center flex flex-col">
-    <h2 class="font-semibold text-center text-3xl pt-2">Registro de estudiante</h2>
+  <div
+    class="antialiased sans-serif text-white h-full  items-center flex flex-col"
+  >
+    <h2 class="font-semibold text-center text-3xl pt-2">
+      Registro de estudiante
+    </h2>
 
     <form
       class="flex flex-col justify-between w-full h-full"
@@ -16,8 +20,14 @@
               </h2>
 
               <div class="text-white text-center my-8">
-                <p>¡{{ user.name }} {{ user.surname }} te has registrado correctamente!</p>
-                <p>Debes esperar a que un administrador acepte la solicitud de ingreso al grupo</p>
+                <p>
+                  ¡{{ user.name }} {{ user.surname }} te has registrado
+                  correctamente!
+                </p>
+                <p>
+                  Debes esperar a que un administrador acepte la solicitud de
+                  ingreso al grupo
+                </p>
               </div>
 
               <div class="flex justify-around mt-10">
@@ -91,17 +101,20 @@
 
           <!-- Step Content -->
           <div class="max-w-5xl mx-auto py-10">
-            <div v-if="step === 1" class="grid grid-cols-2 gap-5 justify-center">
+            <div
+              v-if="step === 1"
+              class="grid grid-cols-2 gap-5 justify-center"
+            >
               <div class="">
                 <label class="font-medium text-sm mb-1 block" for="firstname"
-                >Primer nombre *</label
+                  >Primer nombre *</label
                 >
                 <input
                   id="firstname"
                   v-model="user.name"
                   autocomplete="off"
                   class="input"
-                  placeholder="Ingrese su nombre..."
+                  placeholder="Ingrese su nombre"
                   required
                   type="text"
                 />
@@ -109,28 +122,28 @@
 
               <div>
                 <label class="font-medium text-sm mb-1 block" for="middle_name"
-                >Segundo nombre</label
+                  >Segundo nombre</label
                 >
                 <input
                   id="middle_name"
                   v-model="user.middle_name"
                   autocomplete="off"
                   class="input"
-                  placeholder="Ingrese su segundo nombre..."
+                  placeholder="Ingrese su segundo nombre"
                   type="text"
                 />
               </div>
 
               <div class="">
                 <label class="font-medium text-sm mb-1 block" for="surname"
-                >Primer apellido *</label
+                  >Primer apellido *</label
                 >
                 <input
                   id="surname"
                   v-model="user.surname"
                   autocomplete="off"
                   class="input"
-                  placeholder="Ingrese su apellido..."
+                  placeholder="Ingrese su apellido"
                   required
                   type="text"
                 />
@@ -140,78 +153,116 @@
                 <label
                   class="font-medium text-sm mb-1 block"
                   for="second_surname"
-                >Segundo apellido</label
+                  >Segundo apellido</label
                 >
                 <input
                   id="second_surname"
                   v-model="user.second_surname"
                   autocomplete="off"
                   class="input"
-                  placeholder="Ingrese su segundo apellido..."
+                  placeholder="Ingrese su segundo apellido"
                   type="text"
                 />
               </div>
 
               <span
                 class="mt-2 col-span-2 text-right  text-sm font-bold text-yellow-200"
-              >* campos obligatorios</span
+                >* campos obligatorios</span
               >
             </div>
 
             <!-- ------------------------------------------- -->
             <div v-if="step === 2" class="grid grid-cols-2 gap-5">
-
               <div class="flex flex-col gap-3">
-                <div class="col-span-2">
+                <div class="col-span-2 relative">
                   <label class="font-medium text-sm mb-1 block" for="ci"
-                  >Cédula de identidad</label
+                    >Cédula de identidad</label
                   >
                   <div class="w-2/3">
                     <input
                       id="ci"
                       v-model="user.ci"
                       autocomplete="off"
-                      class="input tracking-widest"
+                      class="input placeholder"
+                      :class="
+                        user.ci.toString().length === 8 &&
+                        !ciIsTaken &&
+                        ciIsValid
+                          ? 'ring-2 ring-green-500'
+                          : user.ci.toString().length === 8
+                          ? 'ring-2 ring-red-500'
+                          : ''
+                      "
                       max="99999999"
                       min="10000000"
                       pattern="^(0|[1-9][0-9]*)$"
-                      placeholder="Ingrese su cédula de identidad..."
+                      placeholder="Ingrese su cédula de identidad"
                       required
                       type="number"
                     />
                   </div>
-                  <span class="text-xs leading-3 pl-1"
-                  >* Sín puntos ni guiones. Ej: 56478622</span
-                  >
+                  <transition name="fade" type="out-in">
+                    <span
+                      v-if="user.ci.toString().length === 8 && !ciIsValid"
+                      class="mt-1 text-red-500 font-medium absolute text-sm pl-1"
+                    >
+                      La cédula ingresada es inválida
+                    </span>
+                    <span
+                      v-else-if="user.ci.toString().length === 8 && ciIsTaken"
+                      class="mt-1 text-red-500 font-medium absolute text-sm pl-1"
+                    >
+                      La cédula ya está tomada
+                    </span>
+                    <span v-else class="mt-1 absolute text-xs pl-1">
+                      * Sín puntos ni guiones. Ej: 56478622
+                    </span>
+                  </transition>
                 </div>
 
-                <div class="">
+                <div class="mt-5">
                   <label class="font-medium text-sm mb-1 block" for="code"
-                  >Código de grupo</label
+                    >Código de grupo</label
                   >
                   <div class="flex items-center gap-2">
                     <input
                       id="code"
                       v-model="user.group_code"
-                      :class="group && group.code === user.group_code ? 'ring-2 ring-green-500' : ''"
+                      :class="
+                        group && group.code === user.group_code
+                          ? 'ring-2 ring-green-500'
+                          : ''
+                      "
                       autocomplete="off"
                       class="input w-2/3 transition-all"
-                      placeholder="Ingrese el codigo del grupo..."
+                      placeholder="Ingrese el codigo del grupo"
                       required
                       type="text"
                     />
                     <div>
-                      <SpinnerLoader v-show="loaders.group"/>
-                      <span v-show="group && !loaders.group && user.group_code.length === 8"
-                            class="material-icons text-green-500">check</span>
+                      <SpinnerLoader v-show="loaders.group" />
                       <span
-                        v-show="((!group && user.group_code.length === 8) || (group && user.group_code.length !== 8 ) || (group && group.code !== user.group_code)) && !loaders.group && user.group_code.length !== 0"
-                        class="material-icons text-red-500">close</span>
+                        v-show="
+                          group && !loaders.group && user.group.length === 8
+                        "
+                        class="material-icons text-green-500"
+                        >check</span
+                      >
+                      <span
+                        v-show="
+                          ((!group && user.group.length === 8) ||
+                            (group && user.group.length !== 8) ||
+                            (group && group.code !== user.group)) &&
+                            !loaders.group &&
+                            user.group.length !== 0
+                        "
+                        class="material-icons text-red-500"
+                        >close</span
+                      >
                     </div>
                   </div>
 
-                  <span class="text-xs text-yellow-400 font-medium pl-1"
-                  >
+                  <span class="text-xs text-yellow-400 font-medium pl-1">
                     Código de grupo que le porporcionó el administrador
                   </span>
                 </div>
@@ -224,18 +275,20 @@
                     <div class="mt-2 px-5 flex justify-evenly">
                       <div>
                         <span class="block text-xs">Grupo</span>
-                        <p class="text-indigo-500 text-2xl font-bold">{{ group.year }}{{ group.name }}</p>
+                        <p class="text-indigo-500 text-2xl font-bold">
+                          {{ group.year }}{{ group.name }}
+                        </p>
                       </div>
                       <div>
                         <span class="block text-xs">Orientación</span>
-                        <p class="font-medium text-xl">{{ group.orientation_name }}</p>
+                        <p class="font-medium text-xl">
+                          {{ group.orientation_name }}
+                        </p>
                       </div>
                     </div>
                   </div>
-
                 </div>
               </transition>
-
             </div>
 
             <!-- -------------------------------------------  -->
@@ -249,37 +302,63 @@
                     class="w-90per mx-auto"
                   />
                 </transition>
-                <button class="mt-4 btn-info mx-auto block text-xs border-0" type="button"
-                        @click="this.$refs.theModal.openModal()/*openModal()*/">
+                <button
+                  class="mt-4 btn-info mx-auto block text-xs border-0"
+                  type="button"
+                  @click="this.$refs.theModal.openModal() /*openModal()*/"
+                >
                   Cambiar avatar
                 </button>
               </div>
               <div class="w-9/12">
                 <div class="mb-5">
                   <label class="font-medium text-sm mb-1 block" for="nickname"
-                  >Nombre de usuario</label
+                    >Nombre de usuario</label
                   >
                   <div class="flex items-center gap-2">
                     <input
                       id="nickname"
                       v-model="user.nickname"
-                      :class="!nicknameIsTaken ? (user.nickname !== '' ? 'ring-2 ring-green-500' : '') : 'ring-2 ring-red-500'"
+                      :class="
+                        !nicknameIsTaken
+                          ? user.nickname !== ''
+                            ? 'ring-2 ring-green-500'
+                            : ''
+                          : 'ring-2 ring-red-500'
+                      "
                       autocomplete="off"
                       class="input max-w-sm"
                       minlength="4"
-                      placeholder="Ingrese su nickname..."
+                      placeholder="Ingrese su nickname"
                       required
                       type="text"
                     />
-                    <span v-if="!nicknameIsTaken && user.nickname !== ''"
-                          class="material-icons text-green-500">check</span>
-                    <span v-else-if="user.nickname !== ''" class="material-icons text-red-500">close</span>
+                    <SpinnerLoader v-show="loaders.nickname" />
+
+                    <span
+                      v-if="
+                        !nicknameIsTaken &&
+                          user.nickname !== '' &&
+                          !loaders.nickname
+                      "
+                      class="material-icons text-green-500"
+                      >check</span
+                    >
+                    <span
+                      v-else-if="!loaders.nickname && user.nickname !== ''"
+                      class="material-icons text-red-500"
+                      >close</span
+                    >
                   </div>
-                  <span v-show="nicknameIsTaken" class="text-xs text-red-500 font-medium">El nombre de usuario ya esta tomado</span>
+                  <span
+                    v-show="nicknameIsTaken && !loaders.nickname"
+                    class="text-xs text-red-500 font-medium"
+                    >El nombre de usuario ya esta tomado</span
+                  >
                 </div>
                 <div class="">
                   <label class="font-medium text-sm mb-1 block" for="email"
-                  >Email</label
+                    >Email</label
                   >
                   <input
                     id="email"
@@ -287,7 +366,7 @@
                     autocomplete="off"
                     class="input "
                     minlength="4"
-                    placeholder="Ingrese su correo electrónico..."
+                    placeholder="Ingrese su correo electrónico"
                     required
                     type="email"
                   />
@@ -295,7 +374,11 @@
               </div>
             </div>
 
-            <TheModal ref="theModal" closeButtonText="Seleccionar" title="Cambiar avatar">
+            <TheModal
+              ref="theModal"
+              closeButtonText="Seleccionar"
+              title="Cambiar avatar"
+            >
               <div class="my-10">
                 <div class="flex justify-center flex-wrap gap-3 px-5 mt-2">
                   <button
@@ -320,7 +403,7 @@
             <div v-if="step === 4" class="grid grid-cols-2 gap-5">
               <div class="">
                 <label class="font-medium text-sm mb-1 block" for="password"
-                >Contraseña</label
+                  >Contraseña</label
                 >
                 <input
                   id="password"
@@ -328,7 +411,7 @@
                   autocomplete="off"
                   class="input"
                   minlength="8"
-                  placeholder="Ingrese una contraseña..."
+                  placeholder="Ingrese una contraseña"
                   required
                   type="password"
                 />
@@ -341,7 +424,7 @@
               </div>
               <div class="">
                 <label class="font-medium text-sm mb-1 block" for="password"
-                >Confirmar contraseña</label
+                  >Confirmar contraseña</label
                 >
                 <div class="flex items-center">
                   <input
@@ -351,12 +434,14 @@
                       user.password === user.confirm_password &&
                       user.password !== ''
                         ? 'ring-2 ring-green-500'
-                        : (user.confirm_password !== '' ? 'ring-2 ring-red-500' : '')
+                        : user.confirm_password !== ''
+                        ? 'ring-2 ring-red-500'
+                        : ''
                     "
                     autocomplete="off"
                     class="input"
                     minlength="8"
-                    placeholder="Repita la contraseña..."
+                    placeholder="Repita la contraseña"
                     required
                     type="password"
                   />
@@ -368,7 +453,7 @@
                         : 'opacity-0'
                     "
                     class="material-icons ml-2 text-3xl text-green-500 transition-all"
-                  >check</span
+                    >check</span
                   >
                 </div>
               </div>
@@ -409,9 +494,7 @@
               </button>
 
               <div>
-                <span>
-
-                </span>
+                <span> </span>
                 <button
                   v-show="step === steps_amount"
                   id="create_user_button"
@@ -432,78 +515,92 @@
 </template>
 
 <script>
-import {mapActions, mapState} from "vuex";
+import { mapActions, mapState } from "vuex";
 import TheModal from "@/components/TheModal";
-import SpinnerLoader from '@/components/SpinnerLoader'
+import SpinnerLoader from "@/components/SpinnerLoader";
 /*import { showAlert } from "../utils/alerts";*/
 
 export default {
   name: "UserRegistration",
   data: () => {
     return {
-      step: 2,
+      step: 1,
       steps_amount: 4,
       togglePassword: false,
       selectedAvatar: null,
       loaders: {
         group: false,
+        nickname: false,
+        email: false,
+        ci: false,
       },
       user: {
         /* ci: null, */
-        ci: 52650714,
-        nickname: "lucaspintos",
+        ci: "",
+        nickname: "",
         name: "Lucas",
-        middle_name: "Mateo",
+        middle_name: "",
         surname: "Pintos",
-        second_surname: "Fitipaldi",
-        group_code: "",
-        type: 'teacher',
-        email: "lucaspintos9090@gmail.com",
+        second_surname: "",
+        group: "",
+        type: "student",
+        email: "",
         avatar: "01-man.svg",
-        password: "mnoseadmin1234",
-        confirm_password: "mnoseadmin1234",
+        password: "",
+        confirm_password: "",
       },
       avatars: [
-        {id: 1, file: "01-man.svg"},
-        {id: 2, file: "02-boy.svg"},
-        {id: 3, file: "03-woman.svg"},
-        {id: 4, file: "04-boy-1.svg"},
-        {id: 5, file: "05-girl-1.svg"},
-        {id: 6, file: "06-woman-3.svg"},
-        {id: 7, file: "07-boy-2.svg"},
+        { id: 1, file: "01-man.svg" },
+        { id: 2, file: "02-boy.svg" },
+        { id: 3, file: "03-woman.svg" },
+        { id: 4, file: "04-boy-1.svg" },
+        { id: 5, file: "05-girl-1.svg" },
+        { id: 6, file: "06-woman-3.svg" },
+        { id: 7, file: "07-boy-2.svg" },
       ],
     };
   },
   components: {
     TheModal,
-    SpinnerLoader
+    SpinnerLoader,
   },
   watch: {
-    'user.group_code': function () {
-      this.validateGroupCode()
-    }
+    "user.group_code": function() {
+      this.validateGroupCode();
+    },
+    "user.nickname": function() {
+      this.validateNickname();
+    },
+    "user.ci": function() {
+      this.validateUserCi();
+    },
   },
   computed: {
     ...mapState({
       group: (state) => state.user.group_data,
+      nicknameIsTaken: (state) => state.user.nicknameIsTaken,
+      emailIsTaken: (state) => state.user.emailIsTaken,
+      ciIsTaken: (state) => state.user.ciIsTaken,
+      ciIsValid: (state) => state.user.ciIsValid,
     }),
-    nicknameIsTaken: function () {
-      /*return this.users.find(user => user.nickname === this.user.nickname);*/
-      return false;
-    },
-    validateDataByStep: function(){
+    validateDataByStep: function() {
       let isOk = false;
-      if(this.step === 3 && !this.nicknameIsTaken){
+      if (this.step === 3 && !this.nicknameIsTaken) {
         isOk = true;
       }
-      if(this.step === 2 && this.group && this.group.code === this.user.group_code){
-        isOk = true;
+      if (this.step === 2) {
+        if (
+          this.group &&
+          this.group.code === this.user.group_code &&
+          !this.ciIsTaken && this.ciIsValid
+        )
+          isOk = true;
       }
-      if(this.step === 1 || this.step === 4){
+      if (this.step === 1 || this.step === 4) {
         isOk = true;
       }
       return isOk;
-    }
+    },
   },
   created() {
     /*if (this.users.length === 0) {
@@ -511,7 +608,14 @@ export default {
     }*/
   },
   methods: {
-    ...mapActions(["createUser", "getGroupByCode"]),
+    ...mapActions([
+      "createUser",
+      "getGroupByCode",
+      "validateUserNickname",
+      "validateUserEmail",
+      "validateUserCiIsTaken",
+      "validateCi",
+    ]),
 
     nextStep() {
       if (this.step === this.steps_amount) {
@@ -521,8 +625,7 @@ export default {
       } else {
         this.step++;
       }
-    }
-    ,
+    },
     previusStep() {
       this.step--;
     },
@@ -531,42 +634,71 @@ export default {
       if (this.user.group_code.length === 8) {
         this.loaders.group = true;
         this.getGroupByCode(this.user.group_code).then(() => {
-          setTimeout(() => {
-            this.loaders.group = false;
-          }, 100)
-        })
+          this.loaders.group = false;
+        });
       }
-    }
-    ,
+    },
+    validateUserCi() {
+      // Para que valide el codigo solo si tiene 8 caracteres
+      if (this.user.ci.toString().length === 8) {
+        this.loaders.ci = true;
+        this.validateCi(this.user.ci.toString()).then(() => {
+          if (this.ciIsValid) {
+            this.validateUserCiIsTaken(this.user.ci.toString()).then(() => {
+              this.loaders.ci = false;
+            });
+          } else {
+            this.loaders.ci = false;
+          }
+        });
+      }
+    },
+    validateNickname() {
+      // Para que valide el nickname solo si tiene 8 caracteres
+      if (this.user.nickname.length >= 8) {
+        this.loaders.nickname = true;
+        this.validateUserNickname(this.user.nickname).then(() => {
+          setTimeout(() => {
+            this.loaders.nickname = false;
+          }, 100);
+        });
+      }
+    },
+    validateEmail() {
+      this.loaders.group = true;
+      this.validateUserEmail(this.user.email).then(() => {
+        setTimeout(() => {
+          this.loaders.email = false;
+        }, 100);
+      });
+    },
     create() {
       if (this.validateData()) {
         this.user.ci = this.user.ci.toString();
         this.createUser(this.user);
 
-        let button = document.getElementById('create_user_button');
+        let button = document.getElementById("create_user_button");
         button.disabled = true;
-        button.classList.replace('btn-success', 'btn-disabled');
+        button.classList.replace("btn-success", "btn-disabled");
 
         setTimeout(() => {
           button.disabled = false;
-          button.classList.replace('btn-disabled', 'btn-success');
+          button.classList.replace("btn-disabled", "btn-success");
         }, 1500);
         setTimeout(() => {
           this.nextStep();
         }, 1000);
-
       }
     },
     validateData() {
       let isOk = true;
-      Object.values(this.user).forEach(element => {
-        if (element.toString() === '') {
+      Object.values(this.user).forEach((element) => {
+        if (element.toString() === "") {
           isOk = false;
         }
       });
       return isOk;
-    }
-    ,
+    },
     selectAvatar(id) {
       let selectedAvatar = document.getElementById(id);
       this.selectedAvatar = id;
@@ -587,12 +719,9 @@ export default {
       selectedAvatar.classList.add("scale-110");
       selectedAvatar.classList.add("bg-opacity-30");
     },
-  }
-  ,
-}
-;
+  },
+};
 </script>
-
 
 <style scoped>
 .input {
@@ -615,7 +744,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease;
 }
 
 .fade-enter-from,
