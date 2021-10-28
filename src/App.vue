@@ -138,7 +138,7 @@ body {
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.05s ease;
+  transition: opacity 0.03s ease;
 }
 
 .fade-enter-from,
