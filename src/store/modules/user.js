@@ -2,11 +2,16 @@ import axios from "axios";
 // Modulo donde manejo las alertas
 // eslint-disable-next-line no-unused-vars
 import { showAlert } from "@/utils/alerts";
+
 export default {
   state: {
     user: {},
     group_data: null,
-  }  ,
+    nicknameIsTaken: true,
+    emailIsTaken: true,
+    ciIsTaken: true,
+    ciIsValid: true,
+  },
   mutations: {
     setUserData(state, user) {
       state.user = user;
@@ -14,9 +19,21 @@ export default {
     changeUser(state, edited_user) {
       state.user = { ...edited_user };
     },
-    setGroup(state, group){
+    setGroup(state, group) {
       state.group_data = group;
-    }
+    },
+    setNickname(state, isTaken) {
+      state.nicknameIsTaken = isTaken;
+    },
+    setEmail(state, isTaken) {
+      state.emailIsTaken = isTaken;
+    },
+    setCi(state, isTaken) {
+      state.ciIsTaken = isTaken;
+    },
+    setCiIsValid(state, isValid) {
+      state.ciIsValid = isValid;
+    },
   },
   actions: {
     async getUserData({ rootState, commit }) {
@@ -95,15 +112,88 @@ export default {
       await axios({
         method: "post",
         url: rootState.API_URL + "/group/getGroupByCode",
-        data: {code},
+        data: { code },
         headers: rootState.headers,
       })
         .then((res) => {
           console.log(res);
-          if("code" in res.data){
+          if ("code" in res.data) {
             commit("setGroup", res.data);
-          }else{
+          } else {
             commit("setGroup", null);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async validateUserNickname({ rootState, commit }, nickname) {
+      await axios({
+        method: "post",
+        url: rootState.API_URL + "/user/isNicknameTaken",
+        data: { nickname },
+        headers: rootState.headers,
+      })
+        .then((res) => {
+          if (res.data) {
+            commit("setNickname", true);
+          } else {
+            commit("setNickname", false);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async validateUserEmail({ rootState, commit }, email) {
+      await axios({
+        method: "post",
+        url: rootState.API_URL + "/user/isEmailTaken",
+        data: { email },
+        headers: rootState.headers,
+      })
+        .then((res) => {
+          if (res.data) {
+            commit("setEmail", true);
+          } else {
+            commit("setEmail", false);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async validateUserCiIsTaken({ rootState, commit }, ci) {
+      await axios({
+        method: "post",
+        url: rootState.API_URL + "/user/isCiTaken",
+        data: { ci },
+        headers: rootState.headers,
+      })
+        .then((res) => {
+
+          if (res.data) {
+            commit("setCi", true);
+          } else {
+            commit("setCi", false);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async validateCi({ rootState, commit }, ci) {
+      await axios({
+        method: "post",
+        url: rootState.API_URL + "/user/ciIsValid",
+        data: { ci },
+        headers: rootState.headers,
+      })
+        .then((res) => {
+          if (res.data) {
+            commit("setCiIsValid", true);
+          } else {
+            commit("setCiIsValid", false);
           }
         })
         .catch((error) => {
