@@ -2,7 +2,10 @@
   <div
     class="antialiased sans-serif text-white h-full  items-center flex flex-col"
   >
-    <h2 class="font-semibold text-center text-3xl pt-2">
+    <h2
+      v-show="step !== 'complete'"
+      class="font-semibold text-center text-3xl pt-2"
+    >
       Registro de estudiante
     </h2>
 
@@ -26,18 +29,18 @@
                 </p>
                 <p>
                   Debes esperar a que un administrador acepte la solicitud de
-                  ingreso al grupo
+                  ingreso al grupo.
                 </p>
               </div>
 
               <div class="flex justify-around mt-10">
-                <!--                <router-link :to="{name: 'Users'}" class="btn-info text-md px-4 py-1 mx-auto" type="button">
-                                  Volver a sección de usuarios
-                                </router-link>
-                                <router-link :to="{ name: 'User', params: { nickname: user.nickname } }"
-                                             class="btn-success text-md px-4 py-1 mx-auto">
-                                  Ver usuario creado
-                                </router-link>-->
+                <router-link
+                  :to="{ name: 'Login' }"
+                  class="btn-info text-md px-4 py-1 mx-auto"
+                  type="button"
+                >
+                  Volver al login
+                </router-link>
               </div>
             </div>
           </div>
@@ -227,10 +230,12 @@
                   <div class="flex items-center gap-2">
                     <input
                       id="code"
-                      v-model="user.group_code"
+                      v-model="user.group"
                       :class="
-                        group && group.code === user.group_code
+                        group && group.code === user.group
                           ? 'ring-2 ring-green-500'
+                          : user.group.length > 0
+                          ? 'ring-2 ring-red-500'
                           : ''
                       "
                       autocomplete="off"
@@ -243,7 +248,10 @@
                       <SpinnerLoader v-show="loaders.group" />
                       <span
                         v-show="
-                          group && !loaders.group && user.group.length === 8
+                          group &&
+                            group.code === user.group &&
+                            !loaders.group &&
+                            user.group.length === 8
                         "
                         class="material-icons text-green-500"
                         >check</span
@@ -269,7 +277,7 @@
               </div>
 
               <transition name="fade">
-                <div v-if="group && group.code === user.group_code">
+                <div v-if="group && group.code === user.group">
                   <div class="bg-gray-700 rounded-xl p-2 bg-opacity-40">
                     <p class="text-center">Grupo al que te unirás</p>
                     <div class="mt-2 px-5 flex justify-evenly">
@@ -305,13 +313,13 @@
                 <button
                   class="mt-4 btn-info mx-auto block text-xs border-0"
                   type="button"
-                  @click="this.$refs.theModal.openModal() /*openModal()*/"
+                  @click="this.$refs.theModal.openModal()"
                 >
                   Cambiar avatar
                 </button>
               </div>
               <div class="w-9/12">
-                <div class="mb-5">
+                <div class="mb-5 relative">
                   <label class="font-medium text-sm mb-1 block" for="nickname"
                     >Nombre de usuario</label
                   >
@@ -321,10 +329,12 @@
                       v-model="user.nickname"
                       :class="
                         !nicknameIsTaken
-                          ? user.nickname !== ''
+                          ? user.nickname.length >= 4 && user.nickname !== ''
                             ? 'ring-2 ring-green-500'
                             : ''
-                          : 'ring-2 ring-red-500'
+                          : user.nickname !== '' && user.nickname.length >= 4
+                          ? 'ring-2 ring-red-500'
+                          : ''
                       "
                       autocomplete="off"
                       class="input max-w-sm"
@@ -339,37 +349,60 @@
                       v-if="
                         !nicknameIsTaken &&
                           user.nickname !== '' &&
+                          user.nickname.length >= 4 &&
                           !loaders.nickname
                       "
                       class="material-icons text-green-500"
                       >check</span
                     >
                     <span
-                      v-else-if="!loaders.nickname && user.nickname !== ''"
+                      v-else-if="!loaders.nickname && user.nickname.length >= 4"
                       class="material-icons text-red-500"
                       >close</span
                     >
                   </div>
                   <span
-                    v-show="nicknameIsTaken && !loaders.nickname"
-                    class="text-xs text-red-500 font-medium"
+                    v-show="
+                      nicknameIsTaken &&
+                        !loaders.nickname &&
+                        user.nickname.length >= 4
+                    "
+                    class="text-sm mt-1 absolute text-red-500 font-medium"
                     >El nombre de usuario ya esta tomado</span
                   >
                 </div>
-                <div class="">
+                <div class="relative mt-10">
                   <label class="font-medium text-sm mb-1 block" for="email"
                     >Email</label
                   >
-                  <input
-                    id="email"
-                    v-model="user.email"
-                    autocomplete="off"
-                    class="input "
-                    minlength="4"
-                    placeholder="Ingrese su correo electrónico"
-                    required
-                    type="email"
-                  />
+                  <div class="flex items-center">
+                    <input
+                      id="email"
+                      v-model="user.email"
+                      autocomplete="off"
+                      class="input "
+                      :class="
+                        emailIsTaken && user.email !== ''
+                          ? 'ring-2 ring-red-500'
+                          : ''
+                      "
+                      minlength="4"
+                      placeholder="Ingrese su correo electrónico"
+                      required
+                      type="email"
+                    />
+                    <span
+                      v-show="emailIsTaken && user.email !== ''"
+                      class="material-icons ml-2 text-red-500"
+                      >warning_amber</span
+                    >
+                  </div>
+                  <p
+                    v-show="emailIsTaken && user.email !== ''"
+                    class="flex items-center mt-1 ml-1 absolute font-medium text-sm text-red-500 "
+                  >
+                    El email ingresado ya fue usado en el sistema
+                  </p>
                 </div>
               </div>
             </div>
@@ -535,12 +568,11 @@ export default {
         ci: false,
       },
       user: {
-        /* ci: null, */
         ci: "",
         nickname: "",
-        name: "Lucas",
+        name: "",
         middle_name: "",
-        surname: "Pintos",
+        surname: "",
         second_surname: "",
         group: "",
         type: "student",
@@ -565,7 +597,7 @@ export default {
     SpinnerLoader,
   },
   watch: {
-    "user.group_code": function() {
+    "user.group": function() {
       this.validateGroupCode();
     },
     "user.nickname": function() {
@@ -573,6 +605,9 @@ export default {
     },
     "user.ci": function() {
       this.validateUserCi();
+    },
+    "user.email": function() {
+      this.validateEmail();
     },
   },
   computed: {
@@ -582,17 +617,19 @@ export default {
       emailIsTaken: (state) => state.user.emailIsTaken,
       ciIsTaken: (state) => state.user.ciIsTaken,
       ciIsValid: (state) => state.user.ciIsValid,
+      registration_state: (state) => state.user.registration_state,
     }),
     validateDataByStep: function() {
       let isOk = false;
-      if (this.step === 3 && !this.nicknameIsTaken) {
+      if (this.step === 3 && !this.nicknameIsTaken && !this.emailIsTaken) {
         isOk = true;
       }
       if (this.step === 2) {
         if (
           this.group &&
-          this.group.code === this.user.group_code &&
-          !this.ciIsTaken && this.ciIsValid
+          this.group.code === this.user.group &&
+          !this.ciIsTaken &&
+          this.ciIsValid
         )
           isOk = true;
       }
@@ -631,9 +668,9 @@ export default {
     },
     validateGroupCode() {
       // Para que valide el codigo solo si tiene 8 caracteres
-      if (this.user.group_code.length === 8) {
+      if (this.user.group.length === 8) {
         this.loaders.group = true;
-        this.getGroupByCode(this.user.group_code).then(() => {
+        this.getGroupByCode(this.user.group).then(() => {
           this.loaders.group = false;
         });
       }
@@ -655,7 +692,7 @@ export default {
     },
     validateNickname() {
       // Para que valide el nickname solo si tiene 8 caracteres
-      if (this.user.nickname.length >= 8) {
+      if (this.user.nickname.length >= 4) {
         this.loaders.nickname = true;
         this.validateUserNickname(this.user.nickname).then(() => {
           setTimeout(() => {
@@ -674,26 +711,38 @@ export default {
     },
     create() {
       if (this.validateData()) {
-        this.user.ci = this.user.ci.toString();
-        this.createUser(this.user);
-
         let button = document.getElementById("create_user_button");
         button.disabled = true;
         button.classList.replace("btn-success", "btn-disabled");
 
-        setTimeout(() => {
-          button.disabled = false;
-          button.classList.replace("btn-disabled", "btn-success");
-        }, 1500);
-        setTimeout(() => {
-          this.nextStep();
-        }, 1000);
+        this.user.ci = this.user.ci.toString();
+        this.createUser(this.user).then(() => {
+          if (this.registration_state) {
+            setTimeout(() => {
+              button.disabled = false;
+              button.classList.replace("btn-disabled", "btn-success");
+            }, 1500);
+            setTimeout(() => {
+              this.nextStep();
+            }, 2000);
+          } else {
+            setTimeout(() => {
+              button.disabled = false;
+              button.classList.replace("btn-disabled", "btn-success");
+            }, 1500);
+          }
+        });
       }
     },
     validateData() {
       let isOk = true;
-      Object.values(this.user).forEach((element) => {
-        if (element.toString() === "") {
+      let keys = Object.keys(this.user);
+      Object.values(this.user).forEach((element, index) => {
+        if (
+          element.toString() === "" &&
+          keys[index] != "middle_name" &&
+          keys[index] != "second_surname"
+        ) {
           isOk = false;
         }
       });
