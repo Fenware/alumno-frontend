@@ -11,6 +11,7 @@ export default {
     emailIsTaken: true,
     ciIsTaken: true,
     ciIsValid: true,
+    registration_state: false
   },
   mutations: {
     setUserData(state, user) {
@@ -34,6 +35,9 @@ export default {
     setCiIsValid(state, isValid) {
       state.ciIsValid = isValid;
     },
+    setRegistrationState(state, registration_state){
+      state.registration_state = registration_state;
+    }
   },
   actions: {
     async getUserData({ rootState, commit }) {
@@ -194,6 +198,29 @@ export default {
             commit("setCiIsValid", true);
           } else {
             commit("setCiIsValid", false);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async createUser({rootState, commit}, payload) {
+      await axios({
+        method: "post",
+        url: rootState.API_URL + "/user/create",
+        data: payload,
+        headers: rootState.headers,
+      })
+        .then((res) => {
+          console.log(res);
+          if (res.data === 1) {
+            commit("setRegistrationState", true);
+          } else {
+            commit("setRegistrationState", false);
+            showAlert({
+              type: "error",
+              message: res.data.result.error_msg,
+            });
           }
         })
         .catch((error) => {
