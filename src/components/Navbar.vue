@@ -6,33 +6,42 @@
       class="p-2 sm:py-4 sm:px-0 h-full text-center flex flex-row sm:flex-col justify-between items-center"
     >
       <div class="flex gap-2 sm:gap-0 sm:block  items-center">
-        <li>
-          <router-link :to="{ name: 'Home' }" v-slot="{ isActive }">
+
+        <li v-for="item in nav_items" :key="item" >
+          <router-link class="relative group" :to="{ name: item.view }" v-slot="{ isActive }">
             <span
               :class="[isActive && 'active']"
               class="nav-icon mt-1 material-icons"
             >
-              home
+              {{ item.icon }}
             </span>
+
+            <span class="tooltip group-hover:scale-100">{{ item.tooltip }}</span>
           </router-link>
         </li>
 
       </div>
       <div class="flex gap-2 sm:gap-0 sm:block  items-center">
         <li>
-          <router-link :to="{ name: 'UserConfiguration' }" v-slot="{ isActive }">
+          <router-link class="relative group" :to="{ name: 'UserConfiguration' }"  v-slot="{ isActive }">
             <span
               :class="[isActive && 'active']"
               class="nav-icon mt-1 material-icons"
             >
               manage_accounts
             </span>
+
+            <span class="tooltip group-hover:scale-100">Configuración de usuario</span>
           </router-link>
         </li>
-        <li class="cursor-pointer">
-          <span @click="logout()" class="nav-icon material-icons">
-            logout
-          </span>
+        <li class="group relative cursor-pointer">
+          <a  @click="logout()">
+            <span class="nav-icon material-icons">
+              logout
+            </span>
+          </a>
+          
+          <span class="tooltip group-hover:scale-100 ml-3">Cerrar sesión</span>
         </li>
       </div>
     </ul>
