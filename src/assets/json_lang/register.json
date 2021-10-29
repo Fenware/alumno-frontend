@@ -42,7 +42,107 @@
     "account_security":{
         "es":"Seguridad de la cuenta",
         "en":"Account security"
+    },
+    "group_code":{
+        "es":"Código de grupo",
+        "en":"Group code"
+    },
+    "enter_nickname":{
+        "es":"Ingrese un nickname",
+        "en":"Enter a nickname"
+    },
+    "enter_name":{
+        "es":"Ingrese su nombre",
+        "en":"Enter your name"
+    },
+    "enter_middle_name":{
+        "es":"Ingrese su nombre",
+        "en":"Enter your middle name"
     }
+    ,
+    "enter_surname":{
+        "es":"Ingrese su apellido",
+        "en":"Enter your surname"
+    },
+    "enter_second_surname":{
+        "es":"Ingrese su segundo apellido",
+        "en":"Enter your second surname"
+    },
+    "enter_code":{
+        "es":"Ingrese el codigo del grupo",
+        "en":"Enter the group code"
+    },
+    "enter_id":{
+        "es":"Ingrese su cédula de identidad",
+        "en":"Enter your identification document"
+    },
+    "non_valid_id":{
+        "es":"La cédula ingresada es inválida",
+        "en":"The ID entered is invalid"
+    },
+    "taken_id":{
+        "es":"La cédula ya está tomada",
+        "en":"The ID is already taken"
+    },
+    "ej_id":{
+        "es":"* Sín puntos ni guiones. Ej: 56478622",
+        "en":"* No dots or dashes. Eg: 56478622"
+    },
+    "admin_group":{
+        "es":"Código de grupo que le porporcionó el administrador",
+        "en":"Group code provided by the administrator"
+    },
+    "change_avatar":{
+        "es":"Cambiar avatar",
+        "en":"Change avatar"
+    },
+    "taken_nickname":{
+        "es":"El nombre de usuario ya esta tomado",
+        "en":"The nickname is already taken"
+    },
+    "enter_email":{
+        "es":"Ingrese su correo electrónico",
+        "en":"Enter your email"
+    },
+    "taken_email":{
+        "es":"El email ingresado ya fue usado en el sistema",
+        "en":"The email entered has already been used in the system"
+    },
+    "enter_password":{
+        "es":"Ingrese una contraseña",
+        "en":"Enter a password"
+    },
+    "password_restriction":{
+        "es":"* Mínimo 6 caracteres",
+        "en":"* Min 6 characters"
+    },
+    "password_confirm":{
+        "es":"Confirmar contraseña",
+        "en":"Confirm Password"
+    },
+    "next_step":{
+        "es":"Siguiente",
+        "en":"Next"
+    },
+    "back_step":{
+        "es":"Atras",
+        "en":"Back"
+    },
+    "complete":{
+        "es":"Completar registro",
+        "en":"Complete registration"
+    }
+
+
+
+
+    
+
+    
+    
+    
+
+    
 
 
 
