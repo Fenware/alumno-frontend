@@ -6,7 +6,7 @@
       v-show="step !== 'complete'"
       class="font-semibold text-center text-3xl pt-2"
     >
-      Registro de estudiante
+      {{getWord({file:'register',word:'student_register',lang})}}
     </h2>
 
     <form
@@ -19,7 +19,7 @@
           <div class="rounded-lg p-10 flex items-center justify-center">
             <div>
               <h2 class="text-2xl mb-4 text-center font-bold">
-                Registro exitoso
+                {{getWord({file:'register',word:'succes_register',lang})}}
               </h2>
 
               <div class="text-white text-center my-8">
@@ -67,7 +67,7 @@
 
                 <div v-show="step === 2">
                   <div class="text-xl font-bold leading-tight">
-                    Unir a grupo
+                    Unirse a grupo
                   </div>
                 </div>
 
@@ -551,6 +551,8 @@
 import { mapActions, mapState } from "vuex";
 import TheModal from "@/components/TheModal";
 import SpinnerLoader from "@/components/SpinnerLoader";
+import { getWord } from "@/utils/lang";
+
 /*import { showAlert } from "../utils/alerts";*/
 
 export default {
@@ -618,6 +620,7 @@ export default {
       ciIsTaken: (state) => state.user.ciIsTaken,
       ciIsValid: (state) => state.user.ciIsValid,
       registration_state: (state) => state.user.registration_state,
+      lang: (state) => state.lang,
     }),
     validateDataByStep: function() {
       let isOk = false;
@@ -768,6 +771,7 @@ export default {
       selectedAvatar.classList.add("scale-110");
       selectedAvatar.classList.add("bg-opacity-30");
     },
+    getWord,
   },
 };
 </script>
