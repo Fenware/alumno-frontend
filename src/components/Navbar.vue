@@ -17,42 +17,6 @@
           </router-link>
         </li>
 
-        <li>
-          <router-link :to="{ name: 'ChatRooms' }" v-slot="{ isActive }">
-            <span
-              :class="[isActive && 'active']"
-              class="nav-icon mt-1 material-icons"
-            >
-              question_answer
-            </span>
-          </router-link>
-        </li>
-
-        <li>
-          <router-link
-            :to="{ name: 'Consultations' }"
-            v-slot="{ isActive }"
-            class="cursor-pointer"
-          >
-            <span
-              :class="[isActive && 'active']"
-              class="nav-icon material-icons"
-            >
-              inbox
-            </span>
-          </router-link>
-        </li>
-
-        <li>
-          <router-link :to="{ name: 'Teachers' }" v-slot="{ isActive }">
-            <span
-              :class="[isActive && 'active']"
-              class="nav-icon mt-1 material-icons"
-            >
-              people
-            </span>
-          </router-link>
-        </li>
       </div>
       <div class="flex gap-2 sm:gap-0 sm:block  items-center">
         <li>
@@ -91,5 +55,9 @@ export default {
 }
 .active {
   @apply bg-gray-600 transition-colors shadow-lg;
+}
+
+.tooltip {
+  @apply transform absolute mt-3.5 w-auto p-2 m-2 min-w-max left-12 rounded-md shadow-lg text-white bg-gray-900 text-sm font-bold transition-all duration-100 scale-0 origin-left;
 }
 </style>
