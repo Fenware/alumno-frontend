@@ -1,0 +1,49 @@
+{
+    "student_register":{
+        "es":"Registro de estudiante",
+        "en":"Register as student"
+    },
+    "succes_register":{
+        "es":"Registro exitoso",
+        "en":"Register successful"
+    },
+    "succes_register_name":{
+        "es":"te has registrado correctamente!",
+        "en":"has registered successfuly"
+    },
+    "wait_admin":{
+        "es":"Debes esperar a que un administrador acepte la solicitud de ingreso al grupo.",
+        "en":"You have to wait an administrator to acept your account"
+    },
+    "back_to_login":{
+        "es":"Volver al login",
+        "en":"Back to login"
+    },
+    "step":{
+        "es":"Paso",
+        "en":"Step"
+    },
+    "of":{
+        "es":"de",
+        "en":"of"
+    },
+    "personal_data":{
+        "es":"Datos personales",
+        "en":"Personal data"
+    },
+    "join_group":{
+        "es":"Unirse a un grupo",
+        "en":"Join a group"
+    },
+    "user_profile":{
+        "es":"Perfil de usuario",
+        "en":"User profile"
+    },
+    "account_security":{
+        "es":"Seguridad de la cuenta",
+        "en":"Account security"
+    },
+
+
+
+}
