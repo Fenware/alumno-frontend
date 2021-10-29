@@ -24,12 +24,10 @@
 
               <div class="text-white text-center my-8">
                 <p>
-                  ¡{{ user.name }} {{ user.surname }} te has registrado
-                  correctamente!
+                  ¡{{ user.name }} {{ user.surname }} {{getWord({file:'register',word:'succes_register_name',lang})}}
                 </p>
                 <p>
-                  Debes esperar a que un administrador acepte la solicitud de
-                  ingreso al grupo.
+                  {{getWord({file:'register',word:'wait_admin',lang})}}
                 </p>
               </div>
 
@@ -39,7 +37,7 @@
                   class="btn-info text-md px-4 py-1 mx-auto"
                   type="button"
                 >
-                  Volver al login
+                  {{getWord({file:'register',word:'back_to_login',lang})}}
                 </router-link>
               </div>
             </div>
@@ -53,7 +51,7 @@
             <div
               class="uppercase tracking-wide text-xs font-bold text-indigo-400 mb-1 leading-tight"
             >
-              <span>Paso: {{ step }} de 4</span>
+              <span>{{getWord({file:'register',word:'step',lang})}}: {{ step }} {{getWord({file:'register',word:'of',lang})}} 4</span>
             </div>
             <div
               class="flex flex-col md:flex-row md:items-center md:justify-between"
@@ -61,25 +59,25 @@
               <div class="flex-1">
                 <div v-show="step === 1">
                   <div class="text-xl font-bold leading-tight">
-                    Datos personales
+                    {{getWord({file:'register',word:'personal_data',lang})}}
                   </div>
                 </div>
 
                 <div v-show="step === 2">
                   <div class="text-xl font-bold leading-tight">
-                    Unirse a grupo
+                    {{getWord({file:'register',word:'join_group',lang})}}
                   </div>
                 </div>
 
                 <div v-show="step === 3">
                   <div class="text-lg font-bold leading-tight">
-                    Perfil de usuario
+                    {{getWord({file:'register',word:'user_profile',lang})}}
                   </div>
                 </div>
 
                 <div v-show="step === 4">
                   <div class="text-lg font-bold leading-tight">
-                    Seguridad de la cuenta
+                    {{getWord({file:'register',word:'account_security',lang})}}
                   </div>
                 </div>
               </div>
@@ -110,7 +108,7 @@
             >
               <div class="">
                 <label class="font-medium text-sm mb-1 block" for="firstname"
-                  >Primer nombre *</label
+                  >{{getWord({file:'user',word:'first_name',lang})}} *</label
                 >
                 <input
                   id="firstname"
@@ -125,7 +123,7 @@
 
               <div>
                 <label class="font-medium text-sm mb-1 block" for="middle_name"
-                  >Segundo nombre</label
+                  >{{getWord({file:'user',word:'middle_name',lang})}}</label
                 >
                 <input
                   id="middle_name"
@@ -139,7 +137,7 @@
 
               <div class="">
                 <label class="font-medium text-sm mb-1 block" for="surname"
-                  >Primer apellido *</label
+                  >{{getWord({file:'user',word:'surname',lang})}} *</label
                 >
                 <input
                   id="surname"
@@ -156,7 +154,7 @@
                 <label
                   class="font-medium text-sm mb-1 block"
                   for="second_surname"
-                  >Segundo apellido</label
+                  >{{getWord({file:'user',word:'second_surname',lang})}}</label
                 >
                 <input
                   id="second_surname"
@@ -170,7 +168,7 @@
 
               <span
                 class="mt-2 col-span-2 text-right  text-sm font-bold text-yellow-200"
-                >* campos obligatorios</span
+                >{{getWord({file:'user',word:'required_fields',lang})}}</span
               >
             </div>
 
@@ -179,7 +177,7 @@
               <div class="flex flex-col gap-3">
                 <div class="col-span-2 relative">
                   <label class="font-medium text-sm mb-1 block" for="ci"
-                    >Cédula de identidad</label
+                    >{{getWord({file:'user',word:'identification_document',lang})}}</label
                   >
                   <div class="w-2/3">
                     <input
