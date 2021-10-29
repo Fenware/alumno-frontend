@@ -78,6 +78,10 @@
     "no_coincidences":{
         "es":"No hay coincidencias",
         "en":"No coincidences"
+    },
+    "required_fields":{
+        "es":"* campos obligatorios",
+        "en":"* required fields"
     }
 
 }

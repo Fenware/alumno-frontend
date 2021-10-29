@@ -31,6 +31,10 @@
         "es":"Nombre",
         "en":"Name"
     },
+    "first_name":{
+        "es":"Primer nombre",
+        "en":"First name"
+    },
     "middle_name":{
         "es":"Segundo nombre",
         "en":"Middle name"
