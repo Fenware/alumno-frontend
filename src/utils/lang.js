@@ -3,7 +3,7 @@ import login_j from '@/assets/json_lang/login.json';
 import error_j from '@/assets/json_lang/error.json';
 import group_j from '@/assets/json_lang/group.json';
 import register_j from '@/assets/json_lang/register.json';
-import subjects_j from '@/assets/json_lang/subject.json';
+import teacher_j from '@/assets/json_lang/teacher.json';
 import user_j from '@/assets/json_lang/user.json';
 import consultation_j from '@/assets/json_lang/consultation.json';
 
@@ -25,8 +25,8 @@ export function getWord({word,file,lang}){
         case 'group':
             palabra =  group_j[word][lang];
             break;
-        case 'subject':
-            palabra =  subjects_j[word][lang];
+        case 'teacher':
+            palabra =  teacher_j[word][lang];
             break;
         case 'register':
             palabra =  register_j[word][lang];
