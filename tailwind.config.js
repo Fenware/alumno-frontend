@@ -1,11 +1,13 @@
 module.exports = {
-  purge: ['./index.html', './src/**/*.{vue,js}'],
+  purge: ["./index.html", "./src/**/*.{vue,js}"],
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {},
   },
   variants: {
-    extend: {},
+    extend: {
+      scale: ["group-hover"],
+    },
   },
   plugins: [],
-}
+};
