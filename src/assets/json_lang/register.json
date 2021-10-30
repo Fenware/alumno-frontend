@@ -113,8 +113,8 @@
         "en":"Enter a password"
     },
     "password_restriction":{
-        "es":"* Mínimo 6 caracteres",
-        "en":"* Min 6 characters"
+        "es":"* Mínimo 8 caracteres",
+        "en":"* Min 8 characters"
     },
     "password_confirm":{
         "es":"Confirmar contraseña",

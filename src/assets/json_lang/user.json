@@ -62,5 +62,13 @@
     "profile":{
         "es":"Perfil",
         "en":"Profile"
+    },
+    "password":{
+        "es":"Contraseña",
+        "en":"Password"
+    },
+    "change_avatar":{
+        "es":"Cambiar avatar",
+        "en":"Change avatar"
     }
 }
