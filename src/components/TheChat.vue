@@ -111,25 +111,25 @@
               <span class="text-sm"> {{ getDate(chat.creation_date) }}</span>
             </p>
             <p class="">
-              Grupo:
+              {{getWord({file:'chat',word:'group',lang})}}:
               <span class="font-medium text-indigo-400">{{
                 chat.group_name
               }}</span>
             </p>
             <p class="">
-              Creador:
+              {{getWord({file:'chat',word:'creator',lang})}}:
               <span class="font-medium text-indigo-400">
                 {{ chat.student_name }}</span
               >
             </p>
             <p class="">
-              Docente:
+              {{getWord({file:'lang',word:'teacher',lang})}}:
               <span class="font-medium text-indigo-400">
                 {{ chat.teacher_name }}</span
               >
             </p>
 
-            <p class="mt-5 font-medium text-lg text-center">Participantes</p>
+            <p class="mt-5 font-medium text-lg text-center">{{getWord({file:'chat',word:'participants',lang})}}</p>
 
             <div>
               <ol class="overflow-y-auto max-h-28">
@@ -150,7 +150,7 @@
               class="btn-danger flex items-center py-0.5"
             >
               <span class="material-icons-round mr-1">warning_amber</span>
-              Terminar sala de chat
+              {{getWord({file:'chat',word:'finish',lang})}}
             </button>
           </div>
         </div>
@@ -162,6 +162,7 @@
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
 import moment from "moment";
+import { getWord } from "@/utils/lang";
 
 export default {
   name: "TheChat",
@@ -173,7 +174,8 @@ export default {
   computed: {
     ...mapState({
       chat: (state) => state.chatRooms.chat,
-      user: (state) => state.userProfile.user,
+      user: (state) => state.user.user,
+      lang: (state) => state.lang,
     }),
   },
   updated() {
@@ -197,14 +199,14 @@ export default {
     },
     getHour(date) {
       // Formateo la fecha a español
-      let date_formated = moment(date).locale("es");
+      let date_formated = moment(date).locale(this.lang);
       date_formated = moment(date_formated).format("LT");
       /* return moment(date_formated).format('LT'); */
       return date_formated;
     },
     getDate(date) {
       // Formateo la fecha a español
-      let date_formated = moment(date).locale("es");
+      let date_formated = moment(date).locale(this.lang);
       date_formated = moment(date_formated).format("LL");
       /* return moment(date_formated).format('LT'); */
       return date_formated;
@@ -256,10 +258,10 @@ export default {
       });
       alert
         .fire({
-          html: `<span class="text-white">¿Estas seguro de terminar la sala de chat?</span>`,
+          html: `<span class="text-white">${getWord({file:'chat',word:'want_to_finish',lang:this.lang})}</span>`,
           showCancelButton: false,
-          confirmButtonText: `Confirmar`,
-          denyButtonText: `Cancelar`,
+          confirmButtonText: `${getWord({file:'lang',word:'confirm',lang:this.lang})}`,
+          denyButtonText: `${getWord({file:'lang',word:'cancel',lang:this.lang})}`,
         })
         .then((result) => {
           if (result.isConfirmed) {
@@ -269,6 +271,7 @@ export default {
           }
         });
     },
+    getWord,
   },
 };
 </script>
