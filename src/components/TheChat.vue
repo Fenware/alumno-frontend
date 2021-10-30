@@ -27,7 +27,7 @@
                 ? 'ml-auto bg-indigo-500 mt-0'
                 : 'bg-gray-700 mt-0'
               : isTheAuthorOfTheMessage(message.id_user)
-              ? 'ml-auto bg-indigo-500 rounded-tr-sm'
+              ? 'ml-auto bg-indigo-500 rounded-tr-sm mt-3'
               : 'bg-gray-700 rounded-tl-sm mt-3'
           "
           class="w-max px-2 py-1 rounded-2xl"
@@ -78,13 +78,14 @@
         class="w-full bg-white bg-opacity-20 hover:bg-opacity-25 focus:bg-opacity-25 transition-all rounded-xl mb-2.5 mt-1 h-10 ml-0.5 mr-3 px-3 outline-none "
         placeholder="Escribir mensaje"
       />
-      <div
+      <button
+        :disabled="new_message.length === 0"
         @click="sendMessage()"
         class=" transition-colors text-gray-400 hover:text-gray-300 cursor-pointer px-1 flex mb-2.5 mt-1"
       >
         <!-- <i class="fas fa-paper-plane px-2 mr-0.5"></i> -->
         <span class="material-icons ">send</span>
-      </div>
+      </button>
     </div>
 
     <div
@@ -112,9 +113,7 @@
             </p>
             <p class="">
               Grupo:
-              <span class="font-medium text-indigo-400">{{
-                chat.group_name
-              }}</span>
+              <span class="font-medium text-indigo-400">{{chat.group_name}}</span>
             </p>
             <p class="">
               Creador:
@@ -173,7 +172,7 @@ export default {
   computed: {
     ...mapState({
       chat: (state) => state.chatRooms.chat,
-      user: (state) => state.userProfile.user,
+      user: (state) => state.user.user,
     }),
   },
   updated() {
@@ -256,10 +255,11 @@ export default {
       });
       alert
         .fire({
-          html: `<span class="text-white">¿Estas seguro de terminar la sala de chat?</span>`,
+          html: `<span class="text-white pb-2">¿Estas seguro de terminar la sala de chat?</span> <br> <span class="text-white"> Ingrese el tema que se trató en el chat </span> <br> <input class="text-white swal2-input" id="resume">`,
           showCancelButton: false,
           confirmButtonText: `Confirmar`,
           denyButtonText: `Cancelar`,
+          
         })
         .then((result) => {
           if (result.isConfirmed) {
