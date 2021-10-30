@@ -26,7 +26,7 @@
       <input
         class="block mx-auto px-10 text-lg mt-10 btn-success"
         type="submit"
-        value="Ingresar"
+        :value="getWord({file:'login',word:'login',lang})"
       />
       <div class="text-center text-white mt-2">
         <span class="block mb-3">O</span>
@@ -35,12 +35,14 @@
         </router-link>
       </div>
     </form>
+    <ToggleLanguageButton class="absolute bottom-0 right-0 m-2"/>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
 import { getWord } from "@/utils/lang";
+import ToggleLanguageButton from '@/components/ToggleLanguageButton.vue';
 
 
 export default {
@@ -63,6 +65,9 @@ export default {
     ...mapActions(["login"]),
     getWord,
   },
+  components: {
+    ToggleLanguageButton,
+  }
 };
 </script>
 

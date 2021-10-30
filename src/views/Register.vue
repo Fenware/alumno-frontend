@@ -115,7 +115,7 @@
                   v-model="user.name"
                   autocomplete="off"
                   class="input"
-                  placeholder="getWord({file:'register',word:'enter_name',lang})"
+                  :placeholder="getWord({file:'register',word:'enter_name',lang})"
                   required
                   type="text"
                 />
@@ -130,7 +130,7 @@
                   v-model="user.middle_name"
                   autocomplete="off"
                   class="input"
-                  placeholder="getWord({file:'register',word:'enter_middle_name',lang})"
+                  :placeholder="getWord({file:'register',word:'enter_middle_name',lang})"
                   type="text"
                 />
               </div>
@@ -168,7 +168,7 @@
 
               <span
                 class="mt-2 col-span-2 text-right  text-sm font-bold text-yellow-200"
-                >{{getWord({file:'user',word:'required_fields',lang})}}</span
+                >{{getWord({file:'lang',word:'required_fields',lang})}}</span
               >
             </div>
 
@@ -197,7 +197,7 @@
                       max="99999999"
                       min="10000000"
                       pattern="^(0|[1-9][0-9]*)$"
-                      placeholder="getWord({file:'register',word:'enter_id',lang})"
+                      :placeholder="getWord({file:'register',word:'enter_id',lang})"
                       required
                       type="number"
                     />
@@ -542,6 +542,7 @@
       </div>
       <!-- / Bottom Navigation https://placehold.co/300x300/e2e8f0/cccccc -->
     </form>
+    <ToggleLanguageButton class="absolute top-0 right-0 m-2"/>
   </div>
 </template>
 
@@ -550,7 +551,7 @@ import { mapActions, mapState } from "vuex";
 import TheModal from "@/components/TheModal";
 import SpinnerLoader from "@/components/SpinnerLoader";
 import { getWord } from "@/utils/lang";
-
+import ToggleLanguageButton from '@/components/ToggleLanguageButton.vue';
 /*import { showAlert } from "../utils/alerts";*/
 
 export default {
@@ -595,6 +596,7 @@ export default {
   components: {
     TheModal,
     SpinnerLoader,
+    ToggleLanguageButton,
   },
   watch: {
     "user.group": function() {
