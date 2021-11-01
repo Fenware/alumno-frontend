@@ -8,17 +8,27 @@
 
       <div class="h-92vh bg-gray-700 rounded-r-2xl shadow-xl">
         <div class="grid grid-cols-5 items-center">
-          <button class=" col-span-1 flex justify-center ">
-            <span class="material-icons">history</span>
-          </button>
+          <div class="flex justify-center">
+            <button class=" group col-span-1 flex justify-center hover:bg-gray-500 rounded-lg transition-all p-1  ">
+              <span class="material-icons">history</span>
+            </button>
+          </div>
 
           <h2 class=" col-span-3 text-center text-2xl my-1">
             {{getWord({file:'consultation',word:'consultations',lang})}}
           </h2>
 
-          <button @click="openModal()" class=" col-span-1 flex justify-center">
-            <span class="material-icons">add</span>
-          </button>
+          <div class="flex justify-center">
+            <button
+              @click="openModal()"
+              class="group col-span-1 flex justify-center hover:bg-gray-500 rounded-lg transition-all p-0.5 "
+            >
+              <span
+                class="material-icons group-hover:rotate-180 transition-all transform"
+                >add</span
+              >
+            </button>
+          </div>
         </div>
 
         <div class=" mt-2 overflow-y-auto px-2" style="height: 82vh;">
