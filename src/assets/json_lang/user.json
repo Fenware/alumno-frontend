@@ -1,0 +1,74 @@
+{
+    "pendent_users":{
+        "es":"Usuarios pendientes",
+        "en":"Pendent users"
+    },
+    "search_by_name_or_id":{
+        "es":"Buscar por nombre deo cedula de identidad"  ,
+        "en":"Search by name or identification document"
+    },
+    "user":{
+        "es":"Usuario",
+        "en":"User"
+    },
+    "users":{
+        "es":"Usuarios",
+        "en":"Users"
+    },
+    "user_list":{
+        "es":"List de usuarios",
+        "en":"User list"
+    },
+    "identification_document":{
+        "es":"Cedula de identidad",
+        "en":"Identification document"
+    },
+    "nickname":{
+        "es":"Nombre de usuario",
+        "en":"Nickname"
+    },
+    "name":{
+        "es":"Nombre",
+        "en":"Name"
+    },
+    "first_name":{
+        "es":"Primer nombre",
+        "en":"First name"
+    },
+    "middle_name":{
+        "es":"Segundo nombre",
+        "en":"Middle name"
+    },
+    "surname":{
+        "es":"Apellido",
+        "en":"Surname"
+    },
+    "second_surname":{
+        "es":"Segundo apellido",
+        "en":"Second surname"
+    },
+    "email":{
+        "es":"E-mail",
+        "en":"E-mail"
+    },
+    "consultations_history":{
+        "es":"Historial de consultas",
+        "en":"Consultations history"
+    },
+    "take_down":{
+        "es":"Dar de baja",
+        "en":"Take down"
+    },
+    "profile":{
+        "es":"Perfil",
+        "en":"Profile"
+    },
+    "password":{
+        "es":"Contraseña",
+        "en":"Password"
+    },
+    "change_avatar":{
+        "es":"Cambiar avatar",
+        "en":"Change avatar"
+    }
+}

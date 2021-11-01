@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 class="text-white text-center text-3xl font-semibold pt-1">
-      Tus profesores
+      {{getWord({file:'teacher',word:'u_teachers',lang})}}
     </h2>
 
     <h3 class="text-indigo-400 text-center text-xl font-semibold pt-1">
@@ -45,7 +45,7 @@
         </div>
 
         <div class="mt-8">
-          <p class="pl-3 font-bold select-none">Horarios de disponibilidad</p>
+          <p class="pl-3 font-bold select-none">{{getWord({file:'teacher',word:'av_hour',lang})}}</p>
           <div class="m-5">
             <p
               class="grid grid-cols-5 border-b-t border-white"
@@ -67,17 +67,18 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import { getWord } from "@/utils/lang";
 
 export default {
   name: "Teachers",
   data: function() {
     return {
       days: {
-        "1": "Lunes",
-        "2": "Martes",
-        "3": "Miércoles",
-        "4": "Jueves",
-        "5": "Viernes",
+        "1": this.lang == 'es' ? "Lunes" : "Monday",
+        "2": this.lang == 'es' ? "Martes" : "Tuesday",
+        "3": this.lang == 'es' ? "Miércoles" : "Wednesday",
+        "4": this.lang == 'es' ? "Jueves" : "Thursday",
+        "5": this.lang == 'es' ? "Viernes" : "Friday",
       },
       group_name: "Ninguno",
     };
@@ -86,6 +87,7 @@ export default {
     ...mapState({
       teachers: (state) => state.teachers.teachers,
       group: (state) => state.group.group,
+      lang: (state) => state.lang,
     }),
   },
   created() {
@@ -100,6 +102,7 @@ export default {
     getHour(hour) {
       return hour.substring(0, 5);
     },
+    getWord,
   },
 };
 </script>

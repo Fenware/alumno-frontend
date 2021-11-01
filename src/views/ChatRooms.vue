@@ -10,17 +10,17 @@
         class="flex justify-center items-center h-full"
         v-if="!create_chat_mode && chat == null"
       >
-        <p class="text-2xl">Seleccione un chat</p>
+        <p class="text-2xl">{{getWord({file:'chat',word:'select_a_chat',lang})}}</p>
       </div>
 
       <div class="w-9/12 mx-auto py-2" v-show="create_chat_mode">
         <div
           class="bg-gray-700 px-5 py-2 rounded-xl border-2 border-gray-600 w-full"
         >
-          <p class="text-2xl text-center">Crear sala de chat</p>
+          <p class="text-2xl text-center">{{getWord({file:'chat',word:'create_chat',lang})}}</p>
           <div class="">
             <div class="mt-4">
-              <p class="text-center mb-1">Ingrese el tema a tratar</p>
+              <p class="text-center mb-1">{{getWord({file:'chat',word:'set_theme',lang})}}</p>
 
               <div class=" ">
                 <input
@@ -30,13 +30,13 @@
                   type="text"
                 />
                 <span class="block text-center text-xs text-yellow-500 pl-2"
-                  >* máximo 50 caracteres</span
+                  >{{getWord({file:'chat',word:'theme_max_char',lang})}}</span
                 >
               </div>
             </div>
 
             <div class="mt-4">
-              <p class="text-center">Seleccione la materia</p>
+              <p class="text-center">{{getWord({file:'chat',word:'select_subject',lang})}}</p>
               <div class="grid grid-cols-2 gap-2 max-h-80 overflow-y-auto">
                 <div
                   class="flex cursor-pointer items-center justify-between  p-2 min-w-full
@@ -64,13 +64,13 @@
 
             <div class="flex justify-around">
               <button @click="create()" class="btn-success mt-5 px-5">
-                Crear sala
+                {{getWord({file:'lang',word:'create',lang})}}
               </button>
               <button
                 @click="create_chat_mode = !create_chat_mode"
                 class="btn-danger mt-5 px-5"
               >
-                Cancelar
+                {{getWord({file:'lang',word:'cancel',lang})}}
               </button>
             </div>
           </div>
@@ -82,7 +82,7 @@
         class="flex justify-between items-center px-2 bg-gray-600 rounded-t-2xl rounded-b-md"
       >
         <h2 class="text-center text-2xl my-2 min-w-max">
-          Salas de chat
+          {{getWord({file:'chat',word:'chats',lang})}}
         </h2>
 
         <button
@@ -92,13 +92,13 @@
           "
           class="btn-success ml-5 text-sm py-0.5 px-3 border-0"
         >
-          Crear
+          {{getWord({file:'lang',word:'create',lang})}}
         </button>
       </div>
 
       <div class=" overflow-y-auto px-2 mt-3" style="height: 80vh;">
         <div class="flex items-center h-full" v-if="chats.length == 0">
-          <p class="min-w-max mx-3">No tienes salas de chat activas</p>
+          <p class="min-w-max mx-3">{{getWord({file:'chat',word:'no_chats',lang})}}</p>
         </div>
         <div
           @click="openChat(chatRoom)"
@@ -141,6 +141,7 @@ import { mapActions, mapMutations, mapState } from "vuex";
 import TheChat from "@/components/TheChat.vue";
 import moment from "moment";
 import io from "socket.io-client";
+import { getWord } from "@/utils/lang";
 
 export default {
   name: "ChatRooms",
@@ -182,6 +183,7 @@ export default {
       user_subjects: (state) => state.group.subjects,
       selected_chat: (state) => state.chatRooms.selected_chat,
       headers: (state) => state.headers,
+      lang: (state) => state.lang,
     }),
   },
   methods: {
@@ -277,6 +279,7 @@ export default {
         div.classList.add("hover:bg-opacity-40");
       }
     },
+    getWord,
   },
 };
 </script>
