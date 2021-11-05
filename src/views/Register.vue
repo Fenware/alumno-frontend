@@ -6,7 +6,7 @@
       v-show="step !== 'complete'"
       class="font-semibold text-center text-3xl pt-2"
     >
-      Registro de estudiante
+      {{getWord({file:'register',word:'student_register',lang})}}
     </h2>
 
     <form
@@ -19,17 +19,15 @@
           <div class="rounded-lg p-10 flex items-center justify-center">
             <div>
               <h2 class="text-2xl mb-4 text-center font-bold">
-                Registro exitoso
+                {{getWord({file:'register',word:'succes_register',lang})}}
               </h2>
 
               <div class="text-white text-center my-8">
                 <p>
-                  ¡{{ user.name }} {{ user.surname }} te has registrado
-                  correctamente!
+                  ¡{{ user.name }} {{ user.surname }} {{getWord({file:'register',word:'succes_register_name',lang})}}
                 </p>
                 <p>
-                  Debes esperar a que un administrador acepte la solicitud de
-                  ingreso al grupo.
+                  {{getWord({file:'register',word:'wait_admin',lang})}}
                 </p>
               </div>
 
@@ -39,7 +37,7 @@
                   class="btn-info text-md px-4 py-1 mx-auto"
                   type="button"
                 >
-                  Volver al login
+                  {{getWord({file:'register',word:'back_to_login',lang})}}
                 </router-link>
               </div>
             </div>
@@ -53,7 +51,7 @@
             <div
               class="uppercase tracking-wide text-xs font-bold text-indigo-400 mb-1 leading-tight"
             >
-              <span>Paso: {{ step }} de 4</span>
+              <span>{{getWord({file:'register',word:'step',lang})}}: {{ step }} {{getWord({file:'register',word:'of',lang})}} 4</span>
             </div>
             <div
               class="flex flex-col md:flex-row md:items-center md:justify-between"
@@ -61,25 +59,25 @@
               <div class="flex-1">
                 <div v-show="step === 1">
                   <div class="text-xl font-bold leading-tight">
-                    Datos personales
+                    {{getWord({file:'register',word:'personal_data',lang})}}
                   </div>
                 </div>
 
                 <div v-show="step === 2">
                   <div class="text-xl font-bold leading-tight">
-                    Unir a grupo
+                    {{getWord({file:'register',word:'join_group',lang})}}
                   </div>
                 </div>
 
                 <div v-show="step === 3">
                   <div class="text-lg font-bold leading-tight">
-                    Perfil de usuario
+                    {{getWord({file:'register',word:'user_profile',lang})}}
                   </div>
                 </div>
 
                 <div v-show="step === 4">
                   <div class="text-lg font-bold leading-tight">
-                    Seguridad de la cuenta
+                    {{getWord({file:'register',word:'account_security',lang})}}
                   </div>
                 </div>
               </div>
@@ -110,14 +108,14 @@
             >
               <div class="">
                 <label class="font-medium text-sm mb-1 block" for="firstname"
-                  >Primer nombre *</label
+                  >{{getWord({file:'user',word:'first_name',lang})}} *</label
                 >
                 <input
                   id="firstname"
                   v-model="user.name"
                   autocomplete="off"
                   class="input"
-                  placeholder="Ingrese su nombre"
+                  :placeholder="getWord({file:'register',word:'enter_name',lang})"
                   required
                   type="text"
                 />
@@ -125,28 +123,28 @@
 
               <div>
                 <label class="font-medium text-sm mb-1 block" for="middle_name"
-                  >Segundo nombre</label
+                  >{{getWord({file:'user',word:'middle_name',lang})}}</label
                 >
                 <input
                   id="middle_name"
                   v-model="user.middle_name"
                   autocomplete="off"
                   class="input"
-                  placeholder="Ingrese su segundo nombre"
+                  :placeholder="getWord({file:'register',word:'enter_middle_name',lang})"
                   type="text"
                 />
               </div>
 
               <div class="">
                 <label class="font-medium text-sm mb-1 block" for="surname"
-                  >Primer apellido *</label
+                  >{{getWord({file:'user',word:'surname',lang})}} *</label
                 >
                 <input
                   id="surname"
                   v-model="user.surname"
                   autocomplete="off"
                   class="input"
-                  placeholder="Ingrese su apellido"
+                  :placeholder="getWord({file:'register',word:'enter_surname',lang})"
                   required
                   type="text"
                 />
@@ -156,21 +154,21 @@
                 <label
                   class="font-medium text-sm mb-1 block"
                   for="second_surname"
-                  >Segundo apellido</label
+                  >{{getWord({file:'user',word:'second_surname',lang})}}</label
                 >
                 <input
                   id="second_surname"
                   v-model="user.second_surname"
                   autocomplete="off"
                   class="input"
-                  placeholder="Ingrese su segundo apellido"
+                  :placeholder="getWord({file:'register',word:'enter_second_surname',lang})"
                   type="text"
                 />
               </div>
 
               <span
                 class="mt-2 col-span-2 text-right  text-sm font-bold text-yellow-200"
-                >* campos obligatorios</span
+                >{{getWord({file:'lang',word:'required_fields',lang})}}</span
               >
             </div>
 
@@ -179,7 +177,7 @@
               <div class="flex flex-col gap-3">
                 <div class="col-span-2 relative">
                   <label class="font-medium text-sm mb-1 block" for="ci"
-                    >Cédula de identidad</label
+                    >{{getWord({file:'user',word:'identification_document',lang})}}</label
                   >
                   <div class="w-2/3">
                     <input
@@ -199,7 +197,7 @@
                       max="99999999"
                       min="10000000"
                       pattern="^(0|[1-9][0-9]*)$"
-                      placeholder="Ingrese su cédula de identidad"
+                      :placeholder="getWord({file:'register',word:'enter_id',lang})"
                       required
                       type="number"
                     />
@@ -209,23 +207,23 @@
                       v-if="user.ci.toString().length === 8 && !ciIsValid"
                       class="mt-1 text-red-500 font-medium absolute text-sm pl-1"
                     >
-                      La cédula ingresada es inválida
+                      {{ getWord({file:'register',word:'non_valid_id',lang}) }}
                     </span>
                     <span
                       v-else-if="user.ci.toString().length === 8 && ciIsTaken"
                       class="mt-1 text-red-500 font-medium absolute text-sm pl-1"
                     >
-                      La cédula ya está tomada
+                      {{ getWord({file:'register',word:'taken_id',lang}) }}
                     </span>
                     <span v-else class="mt-1 absolute text-xs pl-1">
-                      * Sín puntos ni guiones. Ej: 56478622
+                      {{ getWord({file:'register',word:'ej_id',lang}) }}
                     </span>
                   </transition>
                 </div>
 
                 <div class="mt-5">
                   <label class="font-medium text-sm mb-1 block" for="code"
-                    >Código de grupo</label
+                    >{{getWord({file:'register',word:'group_code',lang})}}</label
                   >
                   <div class="flex items-center gap-2">
                     <input
@@ -240,7 +238,7 @@
                       "
                       autocomplete="off"
                       class="input w-2/3 transition-all"
-                      placeholder="Ingrese el codigo del grupo"
+                      :placeholder="getWord({file:'register',word:'enter_code',lang})"
                       required
                       type="text"
                     />
@@ -271,7 +269,7 @@
                   </div>
 
                   <span class="text-xs text-yellow-400 font-medium pl-1">
-                    Código de grupo que le porporcionó el administrador
+                    {{getWord({file:'register',word:'admin_group',lang})}}
                   </span>
                 </div>
               </div>
@@ -315,13 +313,13 @@
                   type="button"
                   @click="this.$refs.theModal.openModal()"
                 >
-                  Cambiar avatar
+                  {{getWord({file:'register',word:'change_avatar',lang})}}
                 </button>
               </div>
               <div class="w-9/12">
                 <div class="mb-5 relative">
                   <label class="font-medium text-sm mb-1 block" for="nickname"
-                    >Nombre de usuario</label
+                    >{{getWord({file:'user',word:'nickname',lang})}}</label
                   >
                   <div class="flex items-center gap-2">
                     <input
@@ -339,7 +337,7 @@
                       autocomplete="off"
                       class="input max-w-sm"
                       minlength="4"
-                      placeholder="Ingrese su nickname"
+                      :placeholder="getWord({file:'register',word:'enter_nickname',lang})"
                       required
                       type="text"
                     />
@@ -368,12 +366,12 @@
                         user.nickname.length >= 4
                     "
                     class="text-sm mt-1 absolute text-red-500 font-medium"
-                    >El nombre de usuario ya esta tomado</span
+                    > {{getWord({file:'register',word:'taken_nickname',lang})}}</span
                   >
                 </div>
                 <div class="relative mt-10">
                   <label class="font-medium text-sm mb-1 block" for="email"
-                    >Email</label
+                    >{{getWord({file:'user',word:'email',lang})}}</label
                   >
                   <div class="flex items-center">
                     <input
@@ -387,7 +385,7 @@
                           : ''
                       "
                       minlength="4"
-                      placeholder="Ingrese su correo electrónico"
+                      :placeholder="getWord({file:'register',word:'enter_email',lang})"
                       required
                       type="email"
                     />
@@ -401,7 +399,7 @@
                     v-show="emailIsTaken && user.email !== ''"
                     class="flex items-center mt-1 ml-1 absolute font-medium text-sm text-red-500 "
                   >
-                    El email ingresado ya fue usado en el sistema
+                   {{getWord({file:'register',word:'taken_email',lang})}}
                   </p>
                 </div>
               </div>
@@ -436,7 +434,7 @@
             <div v-if="step === 4" class="grid grid-cols-2 gap-5">
               <div class="">
                 <label class="font-medium text-sm mb-1 block" for="password"
-                  >Contraseña</label
+                  >{{getWord({file:'user',word:'password',lang})}}</label
                 >
                 <input
                   id="password"
@@ -444,20 +442,20 @@
                   autocomplete="off"
                   class="input"
                   minlength="8"
-                  placeholder="Ingrese una contraseña"
+                  :placeholder="getWord({file:'register',word:'enter_password',lang})"
                   required
                   type="password"
                 />
 
                 <ul class="text-xs mt-1">
                   <li>
-                    * Mínimo 6 caracteres
+                    {{getWord({file:'register',word:'password_restriction',lang})}}
                   </li>
                 </ul>
               </div>
               <div class="">
                 <label class="font-medium text-sm mb-1 block" for="password"
-                  >Confirmar contraseña</label
+                  >{{getWord({file:'register',word:'password_confirm',lang})}}</label
                 >
                 <div class="flex items-center">
                   <input
@@ -474,7 +472,7 @@
                     autocomplete="off"
                     class="input"
                     minlength="8"
-                    placeholder="Repita la contraseña"
+                    :placeholder="getWord({file:'register',word:'password_confirm',lang})"
                     required
                     type="password"
                   />
@@ -509,7 +507,7 @@
                 <span class=" mr-2 material-icons text-lg">
                   arrow_back
                 </span>
-                Paso anterior
+                {{ getWord({file:'register',word:'back_step',lang}) }}
               </a>
             </div>
 
@@ -520,7 +518,7 @@
                 :disabled="!validateDataByStep"
                 class="btn-info pl-5 pr-3 py-1.5 flex items-center select-none"
               >
-                Siguiente
+                {{ getWord({file:'register',word:'next_step',lang}) }}
                 <span class="material-icons text-lg ml-2">
                   arrow_forward
                 </span>
@@ -535,7 +533,7 @@
                   type="button"
                   @click="create()"
                 >
-                  Completar registro
+                  {{ getWord({file:'register',word:'complete',lang}) }}
                 </button>
               </div>
             </div>
@@ -544,6 +542,7 @@
       </div>
       <!-- / Bottom Navigation https://placehold.co/300x300/e2e8f0/cccccc -->
     </form>
+    <ToggleLanguageButton class="absolute top-0 right-0 m-2"/>
   </div>
 </template>
 
@@ -551,6 +550,8 @@
 import { mapActions, mapState } from "vuex";
 import TheModal from "@/components/TheModal";
 import SpinnerLoader from "@/components/SpinnerLoader";
+import { getWord } from "@/utils/lang";
+import ToggleLanguageButton from '@/components/ToggleLanguageButton.vue';
 /*import { showAlert } from "../utils/alerts";*/
 
 export default {
@@ -595,6 +596,7 @@ export default {
   components: {
     TheModal,
     SpinnerLoader,
+    ToggleLanguageButton,
   },
   watch: {
     "user.group": function() {
@@ -618,6 +620,7 @@ export default {
       ciIsTaken: (state) => state.user.ciIsTaken,
       ciIsValid: (state) => state.user.ciIsValid,
       registration_state: (state) => state.user.registration_state,
+      lang: (state) => state.lang,
     }),
     validateDataByStep: function() {
       let isOk = false;
@@ -768,6 +771,7 @@ export default {
       selectedAvatar.classList.add("scale-110");
       selectedAvatar.classList.add("bg-opacity-30");
     },
+    getWord,
   },
 };
 </script>

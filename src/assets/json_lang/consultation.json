@@ -1,0 +1,70 @@
+{
+    "consultations":{
+        "es":"Consultas",
+        "en":"Consultations"
+    },
+    "consultation":{
+        "es":"Consulta",
+        "en":"Consultation"
+    },
+    "select_consultation":{
+        "es":"Seleccione una consulta",
+        "en":"Select a consultation"
+    },
+    "responses":{
+        "es":"Respuestas",
+        "en":"Responses"
+    },
+    "no_responses":{
+        "es":"Aún no hay respuestas",
+        "en":"No answers yet"
+    },
+    "no_consultations":{
+        "es":"No tienes consultas pendientes",
+        "en":"You have no pending consultations"
+    },
+    "respond":{
+        "es":"Responder",
+        "en":"Respond"
+    },
+    "new_response":{
+        "es":"Nueva respuesta",
+        "en":"New response"
+    },
+    "create_consultation":{
+        "es":"Crear nueva consulta",
+        "en":"Create new consultation"
+    },
+    "subject":{
+        "es":"Materia",
+        "en":"Subject"
+    },
+    "select_subject":{
+        "es":"Selecione la materia",
+        "en":"Select the subject"
+    },
+    "theme":{
+        "es":"Asunto",
+        "en":"Theme"
+    },
+    "mesagge":{
+        "es":"Mensaje",
+        "en":"Mesagge"
+    },
+    "reply":{
+        "es":"Responder",
+        "en":"Reply"
+    },
+    "finish":{
+        "es":"Terminar consulta",
+        "en":"Finish consultation"
+    },
+    "want_to_finish":{
+        "es":"¿Deseas terminar la consulta?",
+        "en":"Do you want to finish the consultation?"
+    },
+    "want_to_finish_yes":{
+        "es":"Si, terminar consulta",
+        "en":"Yes, finish consultation"
+    }
+}
