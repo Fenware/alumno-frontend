@@ -8,6 +8,8 @@ import teachers from "./modules/teachers";
 import consultations from "./modules/consultations";
 import group from "./modules/group";
 
+import env_vars from "@/static/env_vars.json";
+
 export default createStore({
   modules: {
     auth,
@@ -18,7 +20,8 @@ export default createStore({
     group
   },
   state: {
-    API_URL: process.env.VUE_APP_ROOT_API,
+    //API_URL: process.env.VUE_APP_ROOT_API /* || "http://localhost:8080" */,
+    API_URL: env_vars.VUE_APP_ROOT_API || "http://localhost:8080",
     token: null,
     headers: {
       Authorization: "",
