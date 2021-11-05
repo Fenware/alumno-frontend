@@ -157,7 +157,7 @@ export default {
     TheChat,
   },
   created() {
-    this.socket = io("ws://localhost:3000", {
+    this.socket = io(this.WS_URL, {
       auth: { token: this.headers },
     });
 
@@ -178,6 +178,7 @@ export default {
   },
   computed: {
     ...mapState({
+      WS_URL: (state) => state.WS_URL,
       chats: (state) => state.chatRooms.chats,
       chat: (state) => state.chatRooms.chat,
       user_subjects: (state) => state.group.subjects,
