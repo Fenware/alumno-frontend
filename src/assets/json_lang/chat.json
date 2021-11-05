@@ -1,0 +1,66 @@
+{
+    "chat":{
+        "es":"Chat",
+        "en":"Chat"
+    },
+    "chats":{
+        "es":"Salas de chat",
+        "en":"Chat rooms"
+    },
+    "no_chats":{
+        "es":"No tienes salas de chat",
+        "en":"You have no active chats"
+    },
+    "no_chats_from":{
+        "es":"No tienes salas de chat de",
+        "en":"You have no active chats from "
+    },
+    "select_a_chat":{
+        "es":"Seleccione un chat",
+        "en":"Select a chat"
+    },
+    "type_message":{
+        "es":"Escribir mensaje",
+        "en":"Type a message"
+    },
+    "group":{
+        "es":"Grupo",
+        "en":"Group"
+    },
+    "creator":{
+        "es":"Creador",
+        "en":"Creator"
+    },
+    "participants":{
+        "es":"Participantes",
+        "en":"Participants"
+    },
+    "create_chat":{
+        "es":"Crear sala de chat",
+        "en":"Create chat room"
+    },
+    "set_theme":{
+        "es":"Ingrese el tema a tratar",
+        "en":"Enter the topic to be discussed"
+    },
+    "theme_max_char":{
+        "es":"* máximo 50 caracteres",
+        "en":"* maximum 50 characters"
+    },
+    "select_subject":{
+        "es":"Selecione la materia",
+        "en":"Select the subject"
+    },
+    "want_to_finish":{
+        "es":"¿Deseas terminar la sala de chat?",
+        "en":"Do you want to finish the chat room?"
+    },
+    "want_to_finish_yes":{
+        "es":"Si, terminar la sala de chat",
+        "en":"Yes, finish chat room"
+    },
+    "finish":{
+        "es":"Terminar sala de chat",
+        "en":"Finish chat room"
+    }
+}

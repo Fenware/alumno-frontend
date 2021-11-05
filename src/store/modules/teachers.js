@@ -3,22 +3,24 @@ import axios from "axios";
 import router from "@/router/index";
 
 // Modulo donde manejo las alertas
-import showAlert from "@/utils/alerts";
+import { showAlert } from "@/utils/alerts";
 
 export default {
   state: {
     teachers: [],
   },
   mutations: {
-    setTeachers(state, teachers){
+    setTeachers(state, teachers) {
       state.teachers = teachers;
-    }
+    },
   },
   actions: {
-    async getTeachers({rootState, commit}) {
+    async getTeachers({ rootState, commit }) {
+      let data = { group: parseInt(rootState.group.group.id_group) };
       await axios({
-        method: "get",
-        url: rootState.API_URL + `/group-user?group=${rootState.group.id_group}&type=teacher`,
+        method: "post",
+        url: rootState.API_URL + `/group/getTeachersFromGroup`,
+        data,
         headers: rootState.headers,
       })
         .then((res) => {

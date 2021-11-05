@@ -7,43 +7,41 @@
     >
       <div class="flex gap-2 sm:gap-0 sm:block  items-center">
 
-        <li>
-          <router-link :to="{ name: 'Home' }"  v-slot="{ isActive }">
-            <span :class="[isActive && 'active']" class="nav-icon mt-1 material-icons">
-              home
+        <li v-for="item in nav_items" :key="item" >
+          <router-link class="relative group" :to="{ name: item.view }" v-slot="{ isActive }">
+            <span
+              :class="[isActive && 'active']"
+              class="nav-icon mt-1 material-icons"
+            >
+              {{ item.icon }}
             </span>
-          </router-link>
-        </li>
 
-        <li>
-          <router-link :to="{ name: 'ChatRooms' }" v-slot="{ isActive }">
-            <span :class="[isActive && 'active']" class="nav-icon mt-1 material-icons">
-              question_answer
-            </span>
-          </router-link>
-        </li>
-
-        <li>
-          <router-link :to="{ name: 'Teachers' }" v-slot="{ isActive }">
-            <span :class="[isActive && 'active']" class="nav-icon mt-1 material-icons">
-              people
-            </span>
+            <span class="tooltip group-hover:scale-100">{{ item.tooltip }}</span>
           </router-link>
         </li>
 
       </div>
       <div class="flex gap-2 sm:gap-0 sm:block  items-center">
         <li>
-          <router-link :to="{ name: 'Configuration' }" v-slot="{ isActive }">
-            <span :class="[isActive && 'active']" class="nav-icon mt-1 material-icons">
+          <router-link class="relative group" :to="{ name: 'UserConfiguration' }"  v-slot="{ isActive }">
+            <span
+              :class="[isActive && 'active']"
+              class="nav-icon mt-1 material-icons"
+            >
               manage_accounts
             </span>
+
+            <span class="tooltip group-hover:scale-100">Configuración de usuario</span>
           </router-link>
         </li>
-        <li class="cursor-pointer">
-          <span @click="logout()" class="nav-icon material-icons">
-            logout
-          </span>
+        <li class="group relative cursor-pointer">
+          <a  @click="logout()">
+            <span class="nav-icon material-icons">
+              logout
+            </span>
+          </a>
+          
+          <span class="tooltip group-hover:scale-100 ml-3">Cerrar sesión</span>
         </li>
       </div>
     </ul>
@@ -54,6 +52,16 @@
 import { mapActions } from "vuex";
 export default {
   name: "Navbar",
+  data: () => {
+    return {
+      nav_items: [
+        { view: "Home", icon: "home", tooltip: "Inicio" },
+        { view: "ChatRooms", icon: "question_answer", tooltip: "Salas de chat" },
+        { view: "Consultations", icon: "inbox", tooltip: "Consultas" },
+        { view: "Teachers", icon: "people", tooltip: "Profesores" },
+      ],
+    };
+  },
   methods: {
     ...mapActions(["logout"]),
   },
@@ -64,7 +72,11 @@ export default {
 .nav-icon {
   @apply mt-0 px-2 py-1 sm:mt-2 text-3xl text-white transition-colors ease-in-out hover:bg-gray-600 rounded-xl;
 }
-.active{
+.active {
   @apply bg-gray-600 transition-colors shadow-lg;
+}
+
+.tooltip {
+  @apply transform absolute mt-3.5 w-auto p-2 m-2 min-w-max left-12 rounded-md shadow-lg text-white bg-gray-900 text-sm font-bold transition-all duration-100 scale-0 origin-left;
 }
 </style>

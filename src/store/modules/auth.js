@@ -2,7 +2,7 @@ import axios from "axios";
 import router from "@/router/index";
 
 // Modulo donde manejo las alertas
-import showAlert from "@/utils/alerts";
+import { showAlert } from "@/utils/alerts";
 
 export default {
   actions: {
@@ -44,7 +44,7 @@ export default {
     async login({ rootState, commit, dispatch }, user) {
       await axios({
         method: "post",
-        url: rootState.API_URL + "/auth",
+        url: rootState.API_URL + "/login",
         data: user,
         headers: {
           "Content-Type": "application/json",

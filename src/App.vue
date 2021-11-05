@@ -1,27 +1,27 @@
 <template>
-  <div v-if="currentRouteName() == 'Login' || currentRouteName() == 'Register'">
+  <div class="h-92vh" v-if="currentRouteName() == 'Login' || currentRouteName() == 'Register'">
     <router-view />
   </div>
   <div class="flex items-center min-h-screen max-h-screen max-w-screen" v-else>
     <div
       class="flex flex-col sm:flex-row sm:justify-between h-92vh w-95per mx-auto | bg-gray-700 bg-opacity-50 backdrop-filter backdrop-blur-lg | rounded-2xl shadow-md"
     >
-      <Navbar />
+      <Navbar class="z-10"/>
       <Main />
-      <Sidebar v-if="currentRouteName() == 'Home' || currentRouteName() == 'Consultation'"/>
+      <!-- <Sidebar v-if="currentRouteName() == 'Home' || currentRouteName() == 'Consultation'"/> -->
     </div>
   </div>
 </template>
 <script>
 import Navbar from "@/components/Navbar";
 import Main from "@/components/Main";
-import Sidebar from "@/components/Sidebar";
+/* import Sidebar from "@/components/Sidebar"; */
 
 export default {
   components: {
     Navbar,
     Main,
-    Sidebar,
+    /* Sidebar, */
   },
   methods: {
     currentRouteName() {
@@ -138,7 +138,7 @@ body {
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.05s ease;
+  transition: opacity 0.03s ease;
 }
 
 .fade-enter-from,
