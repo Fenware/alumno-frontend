@@ -59,6 +59,9 @@ export default {
     },
     setSocket(state, socket) {
       state.socket = socket;
+    },
+    setResume(state, resume){
+      state.chat.resume = resume;
     }
   },
   actions: {
@@ -109,7 +112,6 @@ export default {
         materia: parseInt(chatRoomData.subject),
         asunto: chatRoomData.matter,
       };
-      console.log(data);
       await axios({
         method: "post",
         url: rootState.API_URL + "/chat/create",
@@ -179,7 +181,7 @@ export default {
         });
     },
     async closeChatRoom({ rootState, commit, state }, chat) {
-      let data = { chat: parseInt(chat.id) };
+      let data = { chat: parseInt(chat.id), resume: chat.resume };
       await axios({
         method: "post",
         url: rootState.API_URL + "/chat/closeChat",
@@ -208,7 +210,6 @@ export default {
     },
     wsChatRoomsConnection({ rootState, commit, dispatch, state }) {
       let group = `group:${rootState.group.group.id_group}`;
-      console.log(group);
       state.socket.emit("join:group", group);
 
       state.socket.on(`group:newGroup`, (data) => {
@@ -217,7 +218,6 @@ export default {
         dispatch("newWsMessagesConnection", data);
       });
       state.socket.on(`group:removeGroup`, (data) => {
-        console.log(data);
         commit("removeChatRoom", data.chat);
         if (state.chat && parseInt(state.chat.id) == data.chat) {
           commit("clearChatId");
