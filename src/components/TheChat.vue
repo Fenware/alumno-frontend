@@ -193,7 +193,7 @@ export default {
       "getUserData",
       "getChatRoomById",
     ]),
-    ...mapMutations(["clearChat"]),
+    ...mapMutations(["clearChat", "setResume"]),
     sendMessage() {
       this.sendMessageToChat({ id: this.chat.id, message: this.new_message });
       this.new_message = "";
@@ -267,6 +267,8 @@ export default {
         })
         .then((result) => {
           if (result.isConfirmed) {
+            let resume = document.getElementById("resume").value;
+            this.setResume(resume);
             this.closeChatRoom(this.chat);
             this.modalClose();
             this.clearChat();
